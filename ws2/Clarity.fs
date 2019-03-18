@@ -7,9 +7,8 @@ module Clarity =
     open WebSharper.UI.Html
     open WebSharper.UI.Client
     open WebSharper.UI
-    open Microsoft.EntityFrameworkCore.Internal
-    open System.Security.Claims
-    open System.ComponentModel.DataAnnotations
+    open WebSharper.JavaScript
+    open System.Globalization
 
     type ClarityButtonType = 
         | Primary
@@ -66,6 +65,9 @@ module Clarity =
         | Small
         | Normal
 
+    type ClarityDatePickerVar ={
+        TheDate: string
+    }
 
     let AttrDisabledDyn = Attr.DynamicPred "disabled"
     
@@ -195,6 +197,70 @@ module Clarity =
             ClarityControlLabel [attr.``for`` Id] csv.Value.Label
             d2
         ]
+
+    let ClarityInputGroup children = 
+        div [attr.``class`` "clr-input-group"] children
+
+    let ClarityDateContainer children =
+        Doc.Element "clr-date-container" [attr.``class`` "clr-form-control"] children
+
+    type DatePickerType =
+        | Invisible
+        | DayPicker
+        | MonthPicker
+        | YearPicker
+
+    type DatePickerViewManager = {
+        CurrentView: DatePickerType
+    }
+
+    let ClarityDatePicker (cdp:Var<ClarityDatePickerVar>) =
+        let AttrClrDate = Attr.DynamicPred "clrDate" (Var.Create true).View (Var.Create "").View
+        let cal = (Var.Create {CurrentView = Invisible})
+        let clickHandler a b = 
+            JavaScript.Console.Log("clicked")
+            let a = Lens cal.V.CurrentView
+            a.Value <- DayPicker 
+            ()
+        let blurHandler a b =
+            JavaScript.Console.Log("clicked")
+            let a = Lens cal.V.CurrentView
+            a.Value <- Invisible 
+            ()
+
+        let c1 = input [attr.``type`` "text"] []
+        let c2 = button [attr.``type`` "button"; attr.``class`` "clr-input-group-icon-action"; Attr.Handler "click" clickHandler; Attr.Handler "blur" blurHandler] [
+            Doc.Element "clr-icon" [Attr.Create "shape" "calendar"] []
+        ]
+        let dayPicker () : Doc list =
+            let dayPickerDiv = 
+                Doc.Element "clr-daypicker" [attr.``class`` "daypicker"] [
+                    div [attr.``class`` "calendar-header"] [
+                        div [attr.``class`` "calendar-pickers"] [
+                            button [attr.``class`` "calendar-btn monthpicker-trigger"; attr.``type`` "button"] [text "Mar"]
+                            button [attr.``class`` "calendar-btn yearpicker-trigger"; attr.``type`` "button"] [text "2019"]
+                        ]
+                    ]
+                ]
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [dayPickerDiv] ]
+        let binder (v:DatePickerViewManager) = 
+            match v.CurrentView with
+                | Invisible -> [Doc.Verbatim "<!---->"]
+                | DayPicker -> dayPicker()
+            |> Doc.Concat
+        let d = Doc.BindView binder cal.View
+        let cig = ClarityInputGroup [
+            c1
+            c2
+            d
+        ]
+        let ciw = ClarityInputWrapper [
+            cig
+        ]
+        let cc = ClarityControlContainer (Var.Create false).View [
+            ciw
+        ]
+        cc
 
 
         
