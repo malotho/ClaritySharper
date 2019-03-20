@@ -193,13 +193,13 @@
     {
      return DatePickerViewManager.New;
     }($1))($2);
-   });
+   }).Set(DatePickerType.Invisible);
    return null;
   }
   function dayPicker()
   {
    var dayPickerDiv;
-   dayPickerDiv=Doc.Element("clr-daypicker",List.ofArray([AttrProxy.Create("class","daypicker")]),List.ofArray([Doc.Element("div",[AttrProxy.Create("class","calendar-header")],[Doc.Element("div",[AttrProxy.Create("class","calendar-pickers")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn monthpicker-trigger"),AttrProxy.Create("type","button")],[Doc.TextNode("Mar")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn yearpicker-trigger"),AttrProxy.Create("type","button")],[Doc.TextNode("2019")])])])]));
+   dayPickerDiv=Doc.Element("clr-daypicker",List.ofArray([AttrProxy.Create("class","daypicker")]),List.ofArray([Doc.Element("div",[AttrProxy.Create("class","calendar-header")],[Doc.Element("div",[AttrProxy.Create("class","calendar-pickers")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn monthpicker-trigger"),AttrProxy.Create("type","button")],[Doc.TextNode("Mar")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn yearpicker-trigger"),AttrProxy.Create("type","button")],[Doc.TextNode("2019")])]),Doc.Element("div",[AttrProxy.Create("class","calendar-switchers")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","left"),AttrProxy.Create("shape","angle")]),List.T.Empty)]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("shape","event")]),List.T.Empty)]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","right"),AttrProxy.Create("shape","angle")]),List.T.Empty)])])]),Doc.Element("clr-calendar",List.T.Empty,List.ofArray([Doc.Element("table",[AttrProxy.Create("class","calendar-table weekdays")],[Doc.Element("tbody",[],[Doc.Element("tr",[AttrProxy.Create("class","calendar-row")],[Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("S")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("M")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("T")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("W")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("T")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("F")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("S")])])])])]))]));
    return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([dayPickerDiv]))]);
   }
   AttrModule.DynamicPred("clrDate",Var$1.Create$1(true).get_View(),Var$1.Create$1("").get_View());
@@ -226,7 +226,7 @@
     if(m.$==1)
      $1=dayPicker();
     else
-     throw new MatchFailureException.New("Clarity.fs",247,18);
+     throw new MatchFailureException.New("Clarity.fs",273,18);
    return Doc.Concat($1);
   },cal.get_View())])]);
   return Clarity.ClarityControlContainer(Var$1.Create$1(false).get_View(),[ciw]);

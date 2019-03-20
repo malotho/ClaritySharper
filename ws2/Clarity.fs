@@ -9,6 +9,10 @@ module Clarity =
     open WebSharper.UI
     open WebSharper.JavaScript
     open System.Globalization
+    open FSharp.Date
+    open System
+
+    type Date = DateProvider<epoch=1970>
 
     type ClarityButtonType = 
         | Primary
@@ -232,13 +236,65 @@ module Clarity =
         let c2 = button [attr.``type`` "button"; attr.``class`` "clr-input-group-icon-action"; Attr.Handler "click" clickHandler; Attr.Handler "blur" blurHandler] [
             Doc.Element "clr-icon" [Attr.Create "shape" "calendar"] []
         ]
+        let d = 2019
+        let m = 04
+        let calendarStartDate year month =
+            let rec back (da:System.DateTime) =
+                match da.DayOfWeek with 
+                    | System.DayOfWeek.Sunday -> da
+                    | _ -> back (da.AddDays(-1.0))
+            back (System.DateTime(year, month, 1))
+        let lastSaturday year month =
+            let rec moveToLast (lastDay:System.DateTime) =
+                match lastDay.DayOfWeek with
+                    | System.DayOfWeek.Saturday -> lastDay
+                    | _ -> moveToLast (lastDay.AddDays(1.0))
+            moveToLast((System.DateTime(year, month+1, 1)).AddDays(-1.0))
+
+        let CalRow cDate =
+            
         let dayPicker () : Doc list =
+            let start = calendarStartDate 2019 3
+            let endDate = lastSaturday 2019 3
+            let rec dateList (start:DateTime) =
+                match start
             let dayPickerDiv = 
                 Doc.Element "clr-daypicker" [attr.``class`` "daypicker"] [
                     div [attr.``class`` "calendar-header"] [
                         div [attr.``class`` "calendar-pickers"] [
                             button [attr.``class`` "calendar-btn monthpicker-trigger"; attr.``type`` "button"] [text "Mar"]
                             button [attr.``class`` "calendar-btn yearpicker-trigger"; attr.``type`` "button"] [text "2019"]
+                        ]
+                        div [attr.``class`` "calendar-switchers"] [
+                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"] [
+                                Doc.Element "clr-icon" [attr.dir "left"; attr.shape "angle"] []
+                            ]
+                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"] [
+                                Doc.Element "clr-icon" [attr.shape "event"] []
+                            ]
+                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"] [
+                                Doc.Element "clr-icon" [attr.dir "right"; attr.shape "angle"] []
+                            ]
+                        ]
+                    ]
+                    Doc.Element "clr-calendar" [] [
+                        table [attr.``class`` "calendar-table weekdays"] [
+                            tbody [] [
+                                tr [attr.``class`` "calendar-row"] [
+                                    td [attr.``class`` "calendar-cell"] [text "S"]
+                                    td [attr.``class`` "calendar-cell"] [text "M"]
+                                    td [attr.``class`` "calendar-cell"] [text "T"]
+                                    td [attr.``class`` "calendar-cell"] [text "W"]
+                                    td [attr.``class`` "calendar-cell"] [text "T"]
+                                    td [attr.``class`` "calendar-cell"] [text "F"]
+                                    td [attr.``class`` "calendar-cell"] [text "S"]
+                                ]
+                            ]
+                        ]
+                        table [attr.``class`` "calendar-table calendar-dates"] [
+                            tbody [] [
+                                CalRow start
+                            ]
                         ]
                     ]
                 ]
