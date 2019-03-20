@@ -251,13 +251,15 @@ module Clarity =
                     | _ -> moveToLast (lastDay.AddDays(1.0))
             moveToLast((System.DateTime(year, month+1, 1)).AddDays(-1.0))
 
-        let CalRow cDate =
-            
+        let createDateRange4 (date1:System.DateTime) date2 =
+            let start = min date1 date2
+            let totalDays = (date2 - date1).TotalDays |> abs |> int |> (+) 1
+            Seq.init totalDays (float >> start.AddDays)            
+
         let dayPicker () : Doc list =
-            let start = calendarStartDate 2019 3
-            let endDate = lastSaturday 2019 3
-            let rec dateList (start:DateTime) =
-                match start
+            let start year month = calendarStartDate year month
+            let endDate year month = lastSaturday year month
+            let datelist year month = createDateRange4 (start year month) (endDate year month)
             let dayPickerDiv = 
                 Doc.Element "clr-daypicker" [attr.``class`` "daypicker"] [
                     div [attr.``class`` "calendar-header"] [
