@@ -226,10 +226,13 @@ module Clarity =
             let a = Lens cal.V.CurrentView
             a.Value <- DayPicker 
             ()
+        let dayClickHandler (a:Dom.Element) b = 
+            JavaScript.Console.Log(a.FirstChild.TextContent)
+            ()
         let blurHandler a b =
             JavaScript.Console.Log("clicked")
             let a = Lens cal.V.CurrentView
-            a.Value <- Invisible 
+            //a.Value <- Invisible 
             ()
 
         let c1 = input [attr.``type`` "text"] []
@@ -260,6 +263,19 @@ module Clarity =
             let start year month = calendarStartDate year month
             let endDate year month = lastSaturday year month
             let datelist year month = createDateRange4 (start year month) (endDate year month)
+            let datelistByWeek year month = Seq.chunkBySize 7 (datelist year month)
+            let calday (day:DateTime) =
+                td [attr.``class`` "calendar-cell"] [
+                    Doc.Element "clr-day" [attr.``class`` "day"] [
+                        button [attr.``class`` "day-btn"; attr.``type`` "button"; attr.tabindex "-1"; Attr.Handler "click" dayClickHandler] [text (day.Day.ToString())]
+                    ]
+                ]
+            let calrow (w:DateTime []) =
+                tr [attr.``class`` "calendar-row"] (seq {for day in w -> (calday day)})
+            let calRows year month =
+                seq {for week in datelistByWeek year month -> (calrow week)}
+                    
+
             let dayPickerDiv = 
                 Doc.Element "clr-daypicker" [attr.``class`` "daypicker"] [
                     div [attr.``class`` "calendar-header"] [
@@ -295,7 +311,7 @@ module Clarity =
                         ]
                         table [attr.``class`` "calendar-table calendar-dates"] [
                             tbody [] [
-                                CalRow start
+                                calRows 2019 3 |> Doc.Concat
                             ]
                         ]
                     ]
