@@ -243,6 +243,11 @@ module Clarity =
         let y = Lens cdp.V.Year
         let AttrClrDate = Attr.DynamicPred "clrDate" (Var.Create true).View (Var.Create "").View
         let cal = (Var.Create {CurrentView = Invisible})
+        let ccv = Lens cal.V.CurrentView
+        let activateMonthPicker a b =
+            ccv.Value <- MonthPicker
+        let activateYearPicker a b =
+            ccv.Value <- YearPicker
         let clickHandler a b = 
             JavaScript.Console.Log("clicked")
             let a = Lens cal.V.CurrentView
@@ -298,6 +303,26 @@ module Clarity =
             let totalDays = (date2 - date1).TotalDays |> abs |> int |> (+) 1
             Seq.init totalDays (float >> start.AddDays)            
 
+        let monthPicker () : Doc list =
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [
+                    Doc.Element "clr-monthpicker" [Attr.Class "monthpicker"] [
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "January"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "February"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "March"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "April"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "May"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "June"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "July"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "August"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "September"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "October"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "November"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "December"]
+                    ]
+                ] 
+            ]
+        let yearPicker () : Doc list =
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [div [] []] ]
         let dayPicker () : Doc list =
             let start year month = calendarStartDate year month
             let endDate year month = lastSaturday year month
@@ -324,8 +349,8 @@ module Clarity =
                 Doc.Element "clr-daypicker" [attr.``class`` "daypicker"] [
                     div [attr.``class`` "calendar-header"] [
                         div [attr.``class`` "calendar-pickers"] [
-                            button [attr.``class`` "calendar-btn monthpicker-trigger"; attr.``type`` "button"] [text (MonthNameFromMonthNumber(v.Month))]
-                            button [attr.``class`` "calendar-btn yearpicker-trigger"; attr.``type`` "button"] [text (v.Year.ToString())]
+                            button [attr.``class`` "calendar-btn monthpicker-trigger"; attr.``type`` "button"; Attr.Handler "click" activateMonthPicker] [text (MonthNameFromMonthNumber(v.Month))]
+                            button [attr.``class`` "calendar-btn yearpicker-trigger"; attr.``type`` "button"; Attr.Handler "click" activateYearPicker] [text (v.Year.ToString())]
                         ]
                         div [attr.``class`` "calendar-switchers"] [
                             button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"; Attr.Handler "click" previousMonthHandler] [
@@ -366,6 +391,8 @@ module Clarity =
             match v.CurrentView with
                 | Invisible -> [Doc.Verbatim "<!---->"]
                 | DayPicker -> dayPicker()
+                | MonthPicker -> monthPicker()
+                | YearPicker -> yearPicker()
             |> Doc.Concat
         let d = Doc.BindView binder cal.View
         let cig = ClarityInputGroup [
