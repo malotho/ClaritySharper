@@ -11,6 +11,7 @@ module Clarity =
     open System.Globalization
     open FSharp.Date
     open System
+    open WebSharper.Core.AST
 
     type Date = DateProvider<epoch=1970>
 
@@ -71,6 +72,9 @@ module Clarity =
 
     type ClarityDatePickerVar ={
         TheDate: string
+        Month: int
+        Year: int
+        Day: int
     }
 
     let AttrDisabledDyn = Attr.DynamicPred "disabled"
@@ -218,7 +222,25 @@ module Clarity =
         CurrentView: DatePickerType
     }
 
+    let MonthNameFromMonthNumber m =
+        match m with
+            | 1 -> "Jan"
+            | 2 -> "Feb"
+            | 3 -> "Mar"
+            | 4 -> "Apr"
+            | 5 -> "May"
+            | 6 -> "Jun"
+            | 7 -> "Jul"
+            | 8 -> "Aug"
+            | 9 -> "Sep"
+            | 10 -> "Oct"
+            | 11 -> "Nov"
+            | 12 -> "Dec"
+
     let ClarityDatePicker (cdp:Var<ClarityDatePickerVar>) =
+        let dd = Lens cdp.V.Day
+        let m = Lens cdp.V.Month
+        let y = Lens cdp.V.Year
         let AttrClrDate = Attr.DynamicPred "clrDate" (Var.Create true).View (Var.Create "").View
         let cal = (Var.Create {CurrentView = Invisible})
         let clickHandler a b = 
@@ -228,19 +250,36 @@ module Clarity =
             ()
         let dayClickHandler (a:Dom.Element) b = 
             JavaScript.Console.Log(a.FirstChild.TextContent)
+            dd.Value <- a.FirstChild.TextContent |> int
             ()
         let blurHandler a b =
             JavaScript.Console.Log("clicked")
             let a = Lens cal.V.CurrentView
             //a.Value <- Invisible 
             ()
+        let previousMonthHandler a b =
+            let cd = DateTime(y.Value, m.Value, dd.Value).AddMonths(-1)
+            m.Value <- cd.Month
+            y.Value <- cd.Year
+            dd.Value <- cd.Day
+            ()
+        let nextMonthHandler a b =
+            let cd = DateTime(y.Value, m.Value, dd.Value).AddMonths(1)
+            m.Value <- cd.Month
+            y.Value <- cd.Year
+            dd.Value <- cd.Day
+            ()
+        let currentMonthHandler a b =
+            let cd = DateTime.Today
+            m.Value <- cd.Month
+            y.Value <- cd.Year
+            dd.Value <- cd.Day
+            ()
 
         let c1 = input [attr.``type`` "text"] []
         let c2 = button [attr.``type`` "button"; attr.``class`` "clr-input-group-icon-action"; Attr.Handler "click" clickHandler; Attr.Handler "blur" blurHandler] [
             Doc.Element "clr-icon" [Attr.Create "shape" "calendar"] []
         ]
-        let d = 2019
-        let m = 04
         let calendarStartDate year month =
             let rec back (da:System.DateTime) =
                 match da.DayOfWeek with 
@@ -265,9 +304,14 @@ module Clarity =
             let datelist year month = createDateRange4 (start year month) (endDate year month)
             let datelistByWeek year month = Seq.chunkBySize 7 (datelist year month)
             let calday (day:DateTime) =
+                let ddoc x = 
+                    match x with
+                    | (d1, d2, m1, m2) when m1 <> m2 -> button [attr.``class`` "day-btn is-disabled"; attr.``type`` "button"; attr.tabindex "-1"; Attr.Handler "click" dayClickHandler] [text (day.Day.ToString())]
+                    | (d1, d2, m1, m2) when d1 = DateTime.Today.Day && m1 = DateTime.Today.Month -> button [attr.``class`` "day-btn is-today"; attr.``type`` "button"; attr.tabindex "-1"; Attr.Handler "click" dayClickHandler] [text (day.Day.ToString())]
+                    | _ -> button [attr.``class`` "day-btn"; attr.``type`` "button"; attr.tabindex "-1"; Attr.Handler "click" dayClickHandler] [text (day.Day.ToString())]
                 td [attr.``class`` "calendar-cell"] [
                     Doc.Element "clr-day" [attr.``class`` "day"] [
-                        button [attr.``class`` "day-btn"; attr.``type`` "button"; attr.tabindex "-1"; Attr.Handler "click" dayClickHandler] [text (day.Day.ToString())]
+                        ddoc (day.Day, dd.Value, day.Month, m.Value)
                     ]
                 ]
             let calrow (w:DateTime []) =
@@ -276,21 +320,21 @@ module Clarity =
                 seq {for week in datelistByWeek year month -> (calrow week)}
                     
 
-            let dayPickerDiv = 
+            let dpickbinder (v:ClarityDatePickerVar) =
                 Doc.Element "clr-daypicker" [attr.``class`` "daypicker"] [
                     div [attr.``class`` "calendar-header"] [
                         div [attr.``class`` "calendar-pickers"] [
-                            button [attr.``class`` "calendar-btn monthpicker-trigger"; attr.``type`` "button"] [text "Mar"]
-                            button [attr.``class`` "calendar-btn yearpicker-trigger"; attr.``type`` "button"] [text "2019"]
+                            button [attr.``class`` "calendar-btn monthpicker-trigger"; attr.``type`` "button"] [text (MonthNameFromMonthNumber(v.Month))]
+                            button [attr.``class`` "calendar-btn yearpicker-trigger"; attr.``type`` "button"] [text (v.Year.ToString())]
                         ]
                         div [attr.``class`` "calendar-switchers"] [
-                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"] [
+                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"; Attr.Handler "click" previousMonthHandler] [
                                 Doc.Element "clr-icon" [attr.dir "left"; attr.shape "angle"] []
                             ]
-                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"] [
+                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"; Attr.Handler "click" currentMonthHandler] [
                                 Doc.Element "clr-icon" [attr.shape "event"] []
                             ]
-                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"] [
+                            button [attr.``class`` "calendar-btn switcher"; attr.``type`` "button"; Attr.Handler "click" nextMonthHandler] [
                                 Doc.Element "clr-icon" [attr.dir "right"; attr.shape "angle"] []
                             ]
                         ]
@@ -311,12 +355,13 @@ module Clarity =
                         ]
                         table [attr.``class`` "calendar-table calendar-dates"] [
                             tbody [] [
-                                calRows 2019 3 |> Doc.Concat
+                                calRows (v.Year) (v.Month) |> Doc.Concat
                             ]
                         ]
                     ]
                 ]
-            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [dayPickerDiv] ]
+            let dpd = Doc.BindView dpickbinder cdp.View
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [dpd] ]
         let binder (v:DatePickerViewManager) = 
             match v.CurrentView with
                 | Invisible -> [Doc.Verbatim "<!---->"]

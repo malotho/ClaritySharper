@@ -103,6 +103,9 @@ module Client =
 
     let cdp = Var.Create {
         TheDate = ""
+        Year = 2019
+        Month = 3
+        Day = 24
     }
     
 
