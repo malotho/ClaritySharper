@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,SC$1,Client,SC$2,ws2_Templates,console,WebSharper,UI,Var$1,Operators,DateUtil,Date,Unchecked,Seq,Math,List,Doc,AttrProxy,AttrModule,MatchFailureException,Utils,Strings,View,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,Enumerator,ListModel,Client$1,Templates,DomUtility;
+ var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,SC$1,Client,SC$2,ws2_Templates,console,WebSharper,UI,Var$1,Operators,DateUtil,Date,Unchecked,Seq,Math,List,Doc,AttrProxy,AttrModule,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,Enumerator,ListModel,Client$1,Templates,DomUtility;
  Global=self;
  ws2=Global.ws2=Global.ws2||{};
  Clarity=ws2.Clarity=ws2.Clarity||{};
@@ -33,10 +33,10 @@
  Doc=UI&&UI.Doc;
  AttrProxy=UI&&UI.AttrProxy;
  AttrModule=UI&&UI.AttrModule;
+ View=UI&&UI.View;
  MatchFailureException=WebSharper&&WebSharper.MatchFailureException;
  Utils=WebSharper&&WebSharper.Utils;
  Strings=WebSharper&&WebSharper.Strings;
- View=UI&&UI.View;
  IntelliFactory=Global.IntelliFactory;
  Runtime=IntelliFactory&&IntelliFactory.Runtime;
  Submitter=UI&&UI.Submitter;
@@ -286,11 +286,216 @@
   }
   function monthPicker()
   {
-   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([Doc.Element("clr-monthpicker",List.ofArray([AttrModule.Class("monthpicker")]),List.ofArray([Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("January")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("February")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("March")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("April")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("May")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("June")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("July")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("August")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("September")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("October")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("November")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1")],[Doc.TextNode("December")])]))]))]);
+   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([Doc.Element("clr-monthpicker",List.ofArray([AttrModule.Class("monthpicker")]),List.ofArray([Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(1);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("January")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(2);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("February")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(3);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("March")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(4);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("April")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(5);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("May")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(6);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("June")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(7);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("July")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(8);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("August")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(9);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("September")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(10);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("October")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(11);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("November")]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     m.Set(12);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextNode("December")])]))]))]);
   }
   function yearPicker()
   {
-   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([Doc.Element("div",[],[])]))]);
+   var yc,ycv;
+   yc=Var$1.Create$1(y.Get());
+   ycv=yc.get_View();
+   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([Doc.Element("clr-yearpicker",List.ofArray([AttrProxy.Create("class","yearpicker")]),List.ofArray([Doc.Element("div",[AttrProxy.Create("class","year-switchers")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","left"),AttrProxy.Create("shape","angle"),AttrProxy.Create("title","Previous"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     return yc.Set(yc.Get()-10);
+    };
+   })]),List.T.Empty)]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("shape","event"),AttrProxy.Create("title","Jump to current"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     return yc.Set(y.Get());
+    };
+   })]),List.T.Empty)]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","right"),AttrProxy.Create("shape","angle"),AttrProxy.Create("title","Next"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     return yc.Set(yc.Get()+10);
+    };
+   })]),List.T.Empty)])]),Doc.Element("div",[AttrProxy.Create("class","years")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-9);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-9);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-8);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-8);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-7);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-7);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-6);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-6);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-5);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-5);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-4);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-4);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-3);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-3);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-2);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-2);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-1);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-1);
+   },ycv))]),Doc.Element("button",[AttrProxy.Create("class","calendar-btn year"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     y.Set(yc.Get()-0);
+     return ccv.Set(DatePickerType.DayPicker);
+    };
+   })],[Doc.TextView(View.Map(function(a)
+   {
+    return Global.String(a-0);
+   },ycv))])])]))]))]);
   }
   function dayPicker()
   {

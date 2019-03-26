@@ -306,23 +306,52 @@ module Clarity =
         let monthPicker () : Doc list =
             [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [
                     Doc.Element "clr-monthpicker" [Attr.Class "monthpicker"] [
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "January"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "February"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "March"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "April"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "May"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "June"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "July"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "August"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "September"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "October"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "November"]
-                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"] [text "December"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 1;ccv.Value <- DayPicker) ] [text "January"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 2;ccv.Value <- DayPicker) ] [text "February"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 3;ccv.Value <- DayPicker) ] [text "March"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 4;ccv.Value <- DayPicker) ] [text "April"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 5;ccv.Value <- DayPicker) ] [text "May"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 6;ccv.Value <- DayPicker) ] [text "June"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 7;ccv.Value <- DayPicker) ] [text "July"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 8;ccv.Value <- DayPicker) ] [text "August"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 9;ccv.Value <- DayPicker) ] [text "September"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 10;ccv.Value <- DayPicker) ] [text "October"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 11;ccv.Value <- DayPicker) ] [text "November"]
+                        button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 12;ccv.Value <- DayPicker) ] [text "December"]
                     ]
                 ] 
             ]
         let yearPicker () : Doc list =
-            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [div [] []] ]
+            let yc = Var.Create y.Value 
+            let ycv = yc.View
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [
+                    Doc.Element "clr-yearpicker" [attr.``class`` "yearpicker"] [
+                        div [attr.``class`` "year-switchers"] [
+                            button [attr.``class`` "calendar-btn switcher";attr.``type`` "button"] [
+                                Doc.Element "clr-icon" [attr.dir "left"; attr.shape "angle"; attr.title "Previous";Attr.Handler "click" (fun a b -> yc.Value <- (yc.Value-10) )][]
+                            ]
+                            button [attr.``class`` "calendar-btn switcher";attr.``type`` "button"] [
+                                Doc.Element "clr-icon" [attr.shape "event"; attr.title "Jump to current";Attr.Handler "click" (fun a b -> yc.Value <- y.Value )][]
+                            ]
+                            button [attr.``class`` "calendar-btn switcher";attr.``type`` "button"] [
+                                Doc.Element "clr-icon" [attr.dir "right"; attr.shape "angle"; attr.title "Next";Attr.Handler "click" (fun a b -> yc.Value <- (yc.Value+10) )][]
+                            ]
+                        ]
+                        div [attr.``class`` "years"] [
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-9;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-9 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-8;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-8 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-7;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-7 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-6;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-6 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-5;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-5 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-4;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-4 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-3;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-3 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-2;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-2 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-1;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-1 |> string))]
+                            button [attr.``class`` "calendar-btn year";attr.``type`` "button"; attr.tabindex "-1";Attr.Handler "click" (fun a b -> y.Value <- yc.Value-0;ccv.Value <- DayPicker)] [textView (ycv.Map (fun a -> a-0 |> string))]
+                        ]
+                    ]
+                ] 
+            ]
         let dayPicker () : Doc list =
             let start year month = calendarStartDate year month
             let endDate year month = lastSaturday year month
