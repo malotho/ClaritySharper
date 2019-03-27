@@ -455,6 +455,7 @@ module Clarity =
         Heading: string
         Blocks: ClarityCardBlock list
         Actions: ClarityAction list
+        MainAction: (unit->unit) option
     } 
     and ClarityCardBlock = {
         Title: string
@@ -468,6 +469,7 @@ module Clarity =
     let ClarityBasicCard (cbc:ClarityBasicCardVar) =
 
         let mo = Var.Create false 
+        let clickable = Var.Create (match cbc.MainAction with | Some(v) -> true | None -> false)
         let rec listen (evt:Dom.Event) =
             let myel = JS.Document.GetElementById("carddrop")
             let myel2 = JS.Document.GetElementById("carddropmenu")
@@ -481,6 +483,7 @@ module Clarity =
             ()
 
         let MenuOpenPred = Attr.DynamicClassPred "open"
+        let ClickablePred = Attr.DynamicClassPred "clickable"
         let block (b:ClarityCardBlock) =
             div [attr.``class`` "card-block"][
                 div [attr.``class`` "card-title"] [text b.Title]
@@ -506,8 +509,11 @@ module Clarity =
                 ]
             ]
             dd
-
-        div [attr.``class`` "card"] [
+        let carddiv () =
+            match cbc.MainAction with
+                | Some(v) -> div [attr.``class`` "card clickable";Attr.Handler "click" (fun a b -> (cbc.MainAction.Value()))]
+                | None -> div [attr.``class`` "card"]
+        carddiv() [
             div [attr.``class`` "card-header"][text cbc.Heading]
             blocks
             div [attr.``class`` "card-footer"] [
