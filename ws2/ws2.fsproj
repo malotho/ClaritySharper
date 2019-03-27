@@ -21,10 +21,10 @@
   <ItemGroup>
     <PackageReference Include="FSharp.Date" Version="0.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="WebSharper" Version="4.5.5.319" />
-    <PackageReference Include="WebSharper.FSharp" Version="4.5.5.319" />
-    <PackageReference Include="WebSharper.UI" Version="4.5.6.156" />
-    <PackageReference Include="WebSharper.AspNetCore" Version="4.5.2.100" />
+    <PackageReference Include="WebSharper" Version="4.5.10.332" />
+    <PackageReference Include="WebSharper.FSharp" Version="4.5.10.332" />
+    <PackageReference Include="WebSharper.UI" Version="4.5.9.164" />
+    <PackageReference Include="WebSharper.AspNetCore" Version="4.5.3.104" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.5.4" />
+    <PackageReference Update="FSharp.Core" Version="4.6.2" />
   </ItemGroup>
 
 

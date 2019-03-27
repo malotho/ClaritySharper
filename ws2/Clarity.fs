@@ -12,6 +12,7 @@ module Clarity =
     open FSharp.Date
     open System
     open WebSharper.Core.AST
+    open WebSharper.JavaScript
 
     type Date = DateProvider<epoch=1970>
 
@@ -241,26 +242,35 @@ module Clarity =
         let dd = Lens cdp.V.Day
         let m = Lens cdp.V.Month
         let y = Lens cdp.V.Year
-        let AttrClrDate = Attr.DynamicPred "clrDate" (Var.Create true).View (Var.Create "").View
         let cal = (Var.Create {CurrentView = Invisible})
         let ccv = Lens cal.V.CurrentView
+        let listen (evt:Dom.Event) =
+            let myel = JS.Document.GetElementById("datepicker")
+            let target = downcast evt.Target
+            let rec f (a) =
+                match a with
+                    | (m, n) when n = null -> ccv.Value <- Invisible;() // outside
+                    | (m, n) when n.ToString() = m.ToString() -> () // inside
+                    | (m, n:Dom.Element) -> f(m, downcast n.ParentNode)
+            if myel <> null then f(myel, target)
+            ()
+
         let activateMonthPicker a b =
             ccv.Value <- MonthPicker
         let activateYearPicker a b =
             ccv.Value <- YearPicker
         let clickHandler a b = 
-            JavaScript.Console.Log("clicked")
-            let a = Lens cal.V.CurrentView
-            a.Value <- DayPicker 
+            let myel = JS.Document.GetElementById("datepicker")
+            if myel = null then
+                ccv.Value <- DayPicker 
+                JS.Document.AddEventListener("click", listen)
+            else
+                ccv.Value <- Invisible
+                JS.Document.RemoveEventListener("click", listen)
             ()
         let dayClickHandler (a:Dom.Element) b = 
-            JavaScript.Console.Log(a.FirstChild.TextContent)
             dd.Value <- a.FirstChild.TextContent |> int
-            ()
-        let blurHandler a b =
-            JavaScript.Console.Log("clicked")
-            let a = Lens cal.V.CurrentView
-            //a.Value <- Invisible 
+            ccv.Value <- Invisible
             ()
         let previousMonthHandler a b =
             let cd = DateTime(y.Value, m.Value, dd.Value).AddMonths(-1)
@@ -281,8 +291,8 @@ module Clarity =
             dd.Value <- cd.Day
             ()
 
-        let c1 = input [attr.``type`` "text"] []
-        let c2 = button [attr.``type`` "button"; attr.``class`` "clr-input-group-icon-action"; Attr.Handler "click" clickHandler; Attr.Handler "blur" blurHandler] [
+        let c1 = Doc.BindView (fun a -> input [attr.``type`` "text";attr.value ((a.Day |> string) + "/" + (a.Month |> string) + "/" + (a.Year |> string))][]) cdp.View
+        let c2 = button [attr.``type`` "button"; attr.``class`` "clr-input-group-icon-action"; Attr.Handler "click" clickHandler] [
             Doc.Element "clr-icon" [Attr.Create "shape" "calendar"] []
         ]
         let calendarStartDate year month =
@@ -304,7 +314,7 @@ module Clarity =
             Seq.init totalDays (float >> start.AddDays)            
 
         let monthPicker () : Doc list =
-            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0";attr.id "datepicker"] [
                     Doc.Element "clr-monthpicker" [Attr.Class "monthpicker"] [
                         button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 1;ccv.Value <- DayPicker) ] [text "January"]
                         button [attr.``class`` "calendar-btn month";attr.``type`` "button";attr.tabindex "-1"; Attr.Handler "click" (fun a b -> m.Value <- 2;ccv.Value <- DayPicker) ] [text "February"]
@@ -324,7 +334,7 @@ module Clarity =
         let yearPicker () : Doc list =
             let yc = Var.Create y.Value 
             let ycv = yc.View
-            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0";attr.id "datepicker"] [
                     Doc.Element "clr-yearpicker" [attr.``class`` "yearpicker"] [
                         div [attr.``class`` "year-switchers"] [
                             button [attr.``class`` "calendar-btn switcher";attr.``type`` "button"] [
@@ -415,10 +425,10 @@ module Clarity =
                     ]
                 ]
             let dpd = Doc.BindView dpickbinder cdp.View
-            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0"] [dpd] ]
+            [Doc.Element "clr-datepicker-view-manager" [attr.``class`` "datepicker";attr.tabindex "0";attr.id "datepicker"] [dpd] ]
         let binder (v:DatePickerViewManager) = 
             match v.CurrentView with
-                | Invisible -> [Doc.Verbatim "<!---->"]
+                | Invisible -> JS.Document.RemoveEventListener("click", listen);[Doc.Verbatim "<!---->"]
                 | DayPicker -> dayPicker()
                 | MonthPicker -> monthPicker()
                 | YearPicker -> yearPicker()

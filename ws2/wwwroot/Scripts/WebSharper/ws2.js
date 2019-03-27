@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,SC$1,Client,SC$2,ws2_Templates,console,WebSharper,UI,Var$1,Operators,DateUtil,Date,Unchecked,Seq,Math,List,Doc,AttrProxy,AttrModule,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,Enumerator,ListModel,Client$1,Templates,DomUtility;
+ var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,SC$1,Client,SC$2,ws2_Templates,WebSharper,Unchecked,Operators,DateUtil,Date,Seq,Math,List,UI,Doc,AttrProxy,AttrModule,Var$1,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
  Global=self;
  ws2=Global.ws2=Global.ws2||{};
  Clarity=ws2.Clarity=ws2.Clarity||{};
@@ -19,20 +19,19 @@
  Client=ws2.Client=ws2.Client||{};
  SC$2=Global.StartupCode$ws2$Client=Global.StartupCode$ws2$Client||{};
  ws2_Templates=Global.ws2_Templates=Global.ws2_Templates||{};
- console=Global.console;
  WebSharper=Global.WebSharper;
- UI=WebSharper&&WebSharper.UI;
- Var$1=UI&&UI.Var$1;
+ Unchecked=WebSharper&&WebSharper.Unchecked;
  Operators=WebSharper&&WebSharper.Operators;
  DateUtil=WebSharper&&WebSharper.DateUtil;
  Date=Global.Date;
- Unchecked=WebSharper&&WebSharper.Unchecked;
  Seq=WebSharper&&WebSharper.Seq;
  Math=Global.Math;
  List=WebSharper&&WebSharper.List;
+ UI=WebSharper&&WebSharper.UI;
  Doc=UI&&UI.Doc;
  AttrProxy=UI&&UI.AttrProxy;
  AttrModule=UI&&UI.AttrModule;
+ Var$1=UI&&UI.Var$1;
  View=UI&&UI.View;
  MatchFailureException=WebSharper&&WebSharper.MatchFailureException;
  Utils=WebSharper&&WebSharper.Utils;
@@ -49,6 +48,7 @@
  ProviderBuilder=Server&&Server.ProviderBuilder;
  Handler=Server&&Server.Handler;
  TemplateInstance=Server&&Server.TemplateInstance;
+ console=Global.console;
  Enumerator=WebSharper&&WebSharper.Enumerator;
  ListModel=UI&&UI.ListModel;
  Client$1=UI&&UI.Client;
@@ -174,6 +174,32 @@
  Clarity.ClarityDatePicker=function(cdp)
  {
   var dd,m,y,cal,ccv,ciw;
+  function listen(evt)
+  {
+   var myel,target;
+   myel=self.document.getElementById("datepicker");
+   target=evt.target;
+   !Unchecked.Equals(myel,null)?function($1,$2)
+   {
+    var n,m$1;
+    while(true)
+     if(Unchecked.Equals($2,null))
+      {
+       ccv.Set(DatePickerType.Invisible);
+       return null;
+      }
+     else
+      if(Global.String($2)===Global.String($1))
+       return null;
+      else
+       {
+        n=$2;
+        m$1=$1;
+        $1=m$1;
+        $2=n.parentNode;
+       }
+   }(myel,target):void 0;
+  }
   function activateMonthPicker(a,b)
   {
    return ccv.Set(DatePickerType.MonthPicker);
@@ -184,38 +210,13 @@
   }
   function clickHandler(a,b)
   {
-   console.log("clicked");
-   Var$1.Lens(cal,function($1)
-   {
-    return $1.CurrentView;
-   },function($1,$2)
-   {
-    return(function()
-    {
-     return DatePickerViewManager.New;
-    }($1))($2);
-   }).Set(DatePickerType.DayPicker);
+   Unchecked.Equals(self.document.getElementById("datepicker"),null)?(ccv.Set(DatePickerType.DayPicker),self.document.addEventListener("click",listen)):(ccv.Set(DatePickerType.Invisible),self.document.removeEventListener("click",listen));
    return null;
   }
   function dayClickHandler(a,b)
   {
-   console.log(a.firstChild.textContent);
    dd.Set(Operators.toInt(Global.Number(a.firstChild.textContent)));
-   return null;
-  }
-  function blurHandler(a,b)
-  {
-   console.log("clicked");
-   Var$1.Lens(cal,function($1)
-   {
-    return $1.CurrentView;
-   },function($1,$2)
-   {
-    return(function()
-    {
-     return DatePickerViewManager.New;
-    }($1))($2);
-   });
+   ccv.Set(DatePickerType.Invisible);
    return null;
   }
   function previousMonthHandler(a,b)
@@ -286,7 +287,7 @@
   }
   function monthPicker()
   {
-   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([Doc.Element("clr-monthpicker",List.ofArray([AttrModule.Class("monthpicker")]),List.ofArray([Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
+   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0"),AttrProxy.Create("id","datepicker")]),List.ofArray([Doc.Element("clr-monthpicker",List.ofArray([AttrModule.Class("monthpicker")]),List.ofArray([Doc.Element("button",[AttrProxy.Create("class","calendar-btn month"),AttrProxy.Create("type","button"),AttrProxy.Create("tabindex","-1"),AttrModule.Handler("click",function()
    {
     return function()
     {
@@ -377,7 +378,7 @@
    var yc,ycv;
    yc=Var$1.Create$1(y.Get());
    ycv=yc.get_View();
-   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([Doc.Element("clr-yearpicker",List.ofArray([AttrProxy.Create("class","yearpicker")]),List.ofArray([Doc.Element("div",[AttrProxy.Create("class","year-switchers")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","left"),AttrProxy.Create("shape","angle"),AttrProxy.Create("title","Previous"),AttrModule.Handler("click",function()
+   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0"),AttrProxy.Create("id","datepicker")]),List.ofArray([Doc.Element("clr-yearpicker",List.ofArray([AttrProxy.Create("class","yearpicker")]),List.ofArray([Doc.Element("div",[AttrProxy.Create("class","year-switchers")],[Doc.Element("button",[AttrProxy.Create("class","calendar-btn switcher"),AttrProxy.Create("type","button")],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","left"),AttrProxy.Create("shape","angle"),AttrProxy.Create("title","Previous"),AttrModule.Handler("click",function()
    {
     return function()
     {
@@ -579,7 +580,7 @@
      };
     })],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("dir","right"),AttrProxy.Create("shape","angle")]),List.T.Empty)])])]),Doc.Element("clr-calendar",List.T.Empty,List.ofArray([Doc.Element("table",[AttrProxy.Create("class","calendar-table weekdays")],[Doc.Element("tbody",[],[Doc.Element("tr",[AttrProxy.Create("class","calendar-row")],[Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("S")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("M")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("T")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("W")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("T")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("F")]),Doc.Element("td",[AttrProxy.Create("class","calendar-cell")],[Doc.TextNode("S")])])])]),Doc.Element("table",[AttrProxy.Create("class","calendar-table calendar-dates")],[Doc.Element("tbody",[],[Doc.Concat(calRows(v.Year,v.Month))])])]))]));
    },cdp.get_View());
-   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0")]),List.ofArray([dpd]))]);
+   return List.ofArray([Doc.Element("clr-datepicker-view-manager",List.ofArray([AttrProxy.Create("class","datepicker"),AttrProxy.Create("tabindex","0"),AttrProxy.Create("id","datepicker")]),List.ofArray([dpd]))]);
   }
   dd=Var$1.Lens(cdp,function($1)
   {
@@ -602,7 +603,6 @@
   {
    return ClarityDatePickerVar.New($1.TheDate,$1.Month,$2,$1.Day);
   });
-  AttrModule.DynamicPred("clrDate",Var$1.Create$1(true).get_View(),Var$1.Create$1("").get_View());
   cal=Var$1.Create$1(DatePickerViewManager.New(DatePickerType.Invisible));
   ccv=Var$1.Lens(cal,function($1)
   {
@@ -614,22 +614,19 @@
     return DatePickerViewManager.New;
    }($1))($2);
   });
-  ciw=Clarity.ClarityInputWrapper([Clarity.ClarityInputGroup([Doc.Element("input",[AttrProxy.Create("type","text")],[]),Doc.Element("button",[AttrProxy.Create("type","button"),AttrProxy.Create("class","clr-input-group-icon-action"),AttrModule.Handler("click",function($1)
+  ciw=Clarity.ClarityInputWrapper([Clarity.ClarityInputGroup([Doc.BindView(function(a)
+  {
+   return Doc.Element("input",[AttrProxy.Create("type","text"),AttrProxy.Create("value",Global.String(a.Day)+"/"+Global.String(a.Month)+"/"+Global.String(a.Year))],[]);
+  },cdp.get_View()),Doc.Element("button",[AttrProxy.Create("type","button"),AttrProxy.Create("class","clr-input-group-icon-action"),AttrModule.Handler("click",function($1)
   {
    return function($2)
    {
     return clickHandler($1,$2);
    };
-  }),AttrModule.Handler("blur",function($1)
-  {
-   return function($2)
-   {
-    return blurHandler($1,$2);
-   };
   })],[Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("shape","calendar")]),List.T.Empty)]),Doc.BindView(function(v)
   {
    var m$1;
-   return Doc.Concat((m$1=v.CurrentView,m$1.$==1?dayPicker():m$1.$==2?monthPicker():m$1.$==3?yearPicker():List.ofArray([Doc.Verbatim("<!---->")])));
+   return Doc.Concat((m$1=v.CurrentView,m$1.$==1?dayPicker():m$1.$==2?monthPicker():m$1.$==3?yearPicker():(self.document.removeEventListener("click",listen),List.ofArray([Doc.Verbatim("<!---->")]))));
   },cal.get_View())])]);
   return Clarity.ClarityControlContainer(Var$1.Create$1(false).get_View(),[ciw]);
  };
@@ -671,7 +668,7 @@
              if(m===12)
               return"Dec";
              else
-              throw new MatchFailureException.New("Clarity.fs",226,14);
+              throw new MatchFailureException.New("Clarity.fs",227,14);
  };
  Clarity.ClarityDateContainer=function(children)
  {
