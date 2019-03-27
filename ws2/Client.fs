@@ -110,6 +110,7 @@ module Client =
 
     let cbcv = {
         Heading = "Header"
+        MainAction = Some(fun () -> JavaScript.Console.Log("Main Action hit") )
         Blocks = [
             {
                 Title = "Block"

@@ -174,12 +174,13 @@
    CurrentView:CurrentView
   };
  };
- ClarityBasicCardVar.New=function(Heading,Blocks,Actions)
+ ClarityBasicCardVar.New=function(Heading,Blocks,Actions,MainAction)
  {
   return{
    Heading:Heading,
    Blocks:Blocks,
-   Actions:Actions
+   Actions:Actions,
+   MainAction:MainAction
   };
  };
  ClarityCardBlock.New=function(Title,Text)
@@ -232,6 +233,7 @@
    return Clarity.ClarityButton(Var$1.Create$1(ClarityButtonSpec.New(ClarityButtonType.Flat,false,ButtonSize.Small,a.Text)),a.Action);
   }
   mo=Var$1.Create$1(false);
+  Var$1.Create$1(cbc.MainAction!=null);
   blocks=Doc.Concat(List.map(function(b)
   {
    return Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-title")],[Doc.TextNode(b.Title)]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(b.Text)])]);
@@ -255,7 +257,23 @@
     return self.document.addEventListener("click",listen);
    };
   })],[Doc.TextNode("Dropdown 1"),Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("shape","caret down")]),List.T.Empty)]),Doc.Element("div",[AttrProxy.Create("class","dropdown-menu"),AttrProxy.Create("id","carddropmenu")],[links])]));
-  return Doc.Element("div",[AttrProxy.Create("class","card")],[Doc.Element("div",[AttrProxy.Create("class","card-header")],[Doc.TextNode(cbc.Heading)]),blocks,Doc.Element("div",[AttrProxy.Create("class","card-footer")],[acts,cbc.Actions.get_Length()>2?drops:Doc.Verbatim("")])]);
+  return(function()
+  {
+   var a,a$1;
+   return cbc.MainAction==null?(a=List.ofArray([AttrProxy.Create("class","card")]),function(c)
+   {
+    return Doc.Element("div",a,c);
+   }):(a$1=List.ofArray([AttrProxy.Create("class","card clickable"),AttrModule.Handler("click",function()
+   {
+    return function()
+    {
+     return cbc.MainAction.$0();
+    };
+   })]),function(c)
+   {
+    return Doc.Element("div",a$1,c);
+   });
+  }(null))(List.ofArray([Doc.Element("div",[AttrProxy.Create("class","card-header")],[Doc.TextNode(cbc.Heading)]),blocks,Doc.Element("div",[AttrProxy.Create("class","card-footer")],[acts,cbc.Actions.get_Length()>2?drops:Doc.Verbatim("")])]));
  };
  Clarity.ClarityDatePicker=function(cdp)
  {
@@ -1263,7 +1281,13 @@
   }),ClarityAction.New("Footer Action 4",function()
   {
    console.log("Action 4 hit");
-  })]));
+  })]),{
+   $:1,
+   $0:function()
+   {
+    console.log("Main Action hit");
+   }
+  });
   SC$2.pv=View.Map(function($1)
   {
    return $1.Label;
