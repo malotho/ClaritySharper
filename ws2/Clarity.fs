@@ -13,6 +13,10 @@ module Clarity =
     open System
     open WebSharper.Core.AST
     open WebSharper.JavaScript
+    open WebSharper.UI.Client
+    open WebSharper.UI.Client
+    open WebSharper.UI.Client
+    open WebSharper.UI.Client
 
     type Date = DateProvider<epoch=1970>
 
@@ -462,6 +466,21 @@ module Clarity =
     }
 
     let ClarityBasicCard (cbc:ClarityBasicCardVar) =
+
+        let mo = Var.Create false 
+        let rec listen (evt:Dom.Event) =
+            let myel = JS.Document.GetElementById("carddrop")
+            let myel2 = JS.Document.GetElementById("carddropmenu")
+            let target = downcast evt.Target
+            let rec f (a) =
+                match (a:Dom.Element * Dom.Element) with
+                    | (m, n) when n = null -> mo.Value <- false;JS.Document.RemoveEventListener("click", listen);() // outside
+                    | (m, n) when n.IsEqualNode(m) -> () // inside
+                    | (m, n:Dom.Element) -> f(m, downcast n.ParentNode)
+            if myel.ClassList.Contains("open") then f(myel2, target)
+            ()
+
+        let MenuOpenPred = Attr.DynamicClassPred "open"
         let block (b:ClarityCardBlock) =
             div [attr.``class`` "card-block"][
                 div [attr.``class`` "card-title"] [text b.Title]
@@ -470,14 +489,30 @@ module Clarity =
         let blocks = List.map block cbc.Blocks |> Doc.Concat
         let act (a:ClarityAction) =
             ClarityButton (Var.Create {Type=Flat; Disabled=false;Size=Small;Text=a.Text}) a.Action
-        let acts =  match cbc.Actions.Length with
-            | a when a <=2 -> cbc.Actions |> List.map act |> Doc.Concat
-            | _ -> cbc.Actions |> Seq.take 2 |> Seq.map act |> Doc.Concat
+        let acts = match cbc.Actions.Length with
+                    | a when a <=2 -> cbc.Actions |> List.map act |> Doc.Concat
+                    | _ -> cbc.Actions |> Seq.take 2 |> Seq.map act |> Doc.Concat
+        let drop (aa:ClarityAction) =
+            a [attr.``class`` "dropdown-item";Attr.Handler "click" (fun a b -> mo.Value <- false; aa.Action())] [text aa.Text]
+        let drops = 
+            let links = cbc.Actions |> Seq.rev |> Seq.take (cbc.Actions.Length-2) |> Seq.rev |> Seq.map drop |> Doc.Concat
+            let dd = div [attr.``class`` "dropdown top-left";MenuOpenPred mo.View;attr.id "carddrop"] [
+                button [attr.``class`` "dropdown-toggle btn btn-sm btn-link";Attr.Handler "click" (fun a b -> mo.Value <- true;JS.Document.AddEventListener( "click", listen))] [
+                    text "Dropdown 1"
+                    Doc.Element "clr-icon" [attr.shape "caret down"] []
+                ]
+                div [attr.``class`` "dropdown-menu";attr.id "carddropmenu"] [
+                    links
+                ]
+            ]
+            dd
+
         div [attr.``class`` "card"] [
             div [attr.``class`` "card-header"][text cbc.Heading]
             blocks
             div [attr.``class`` "card-footer"] [
                 acts
+                (if cbc.Actions.Length > 2 then drops else Doc.Verbatim "")
             ]
         ]
 
