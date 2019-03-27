@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,SC$1,Client,SC$2,ws2_Templates,WebSharper,Unchecked,Operators,DateUtil,Date,Seq,Math,List,UI,Doc,AttrProxy,AttrModule,Var$1,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
+ var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,ClarityBasicCardVar,ClarityCardBlock,ClarityAction,SC$1,Client,SC$2,ws2_Templates,WebSharper,UI,Var$1,Doc,List,AttrProxy,Seq,Unchecked,Operators,DateUtil,Date,Math,AttrModule,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
  Global=self;
  ws2=Global.ws2=Global.ws2||{};
  Clarity=ws2.Clarity=ws2.Clarity||{};
@@ -15,23 +15,26 @@
  ClarityDatePickerVar=Clarity.ClarityDatePickerVar=Clarity.ClarityDatePickerVar||{};
  DatePickerType=Clarity.DatePickerType=Clarity.DatePickerType||{};
  DatePickerViewManager=Clarity.DatePickerViewManager=Clarity.DatePickerViewManager||{};
+ ClarityBasicCardVar=Clarity.ClarityBasicCardVar=Clarity.ClarityBasicCardVar||{};
+ ClarityCardBlock=Clarity.ClarityCardBlock=Clarity.ClarityCardBlock||{};
+ ClarityAction=Clarity.ClarityAction=Clarity.ClarityAction||{};
  SC$1=Global.StartupCode$ws2$Clarity=Global.StartupCode$ws2$Clarity||{};
  Client=ws2.Client=ws2.Client||{};
  SC$2=Global.StartupCode$ws2$Client=Global.StartupCode$ws2$Client||{};
  ws2_Templates=Global.ws2_Templates=Global.ws2_Templates||{};
  WebSharper=Global.WebSharper;
+ UI=WebSharper&&WebSharper.UI;
+ Var$1=UI&&UI.Var$1;
+ Doc=UI&&UI.Doc;
+ List=WebSharper&&WebSharper.List;
+ AttrProxy=UI&&UI.AttrProxy;
+ Seq=WebSharper&&WebSharper.Seq;
  Unchecked=WebSharper&&WebSharper.Unchecked;
  Operators=WebSharper&&WebSharper.Operators;
  DateUtil=WebSharper&&WebSharper.DateUtil;
  Date=Global.Date;
- Seq=WebSharper&&WebSharper.Seq;
  Math=Global.Math;
- List=WebSharper&&WebSharper.List;
- UI=WebSharper&&WebSharper.UI;
- Doc=UI&&UI.Doc;
- AttrProxy=UI&&UI.AttrProxy;
  AttrModule=UI&&UI.AttrModule;
- Var$1=UI&&UI.Var$1;
  View=UI&&UI.View;
  MatchFailureException=WebSharper&&WebSharper.MatchFailureException;
  Utils=WebSharper&&WebSharper.Utils;
@@ -170,6 +173,42 @@
   return{
    CurrentView:CurrentView
   };
+ };
+ ClarityBasicCardVar.New=function(Heading,Blocks,Actions)
+ {
+  return{
+   Heading:Heading,
+   Blocks:Blocks,
+   Actions:Actions
+  };
+ };
+ ClarityCardBlock.New=function(Title,Text)
+ {
+  return{
+   Title:Title,
+   Text:Text
+  };
+ };
+ ClarityAction.New=function(Text,Action)
+ {
+  return{
+   Text:Text,
+   Action:Action
+  };
+ };
+ Clarity.ClarityBasicCard=function(cbc)
+ {
+  var blocks,acts;
+  function act(a)
+  {
+   return Clarity.ClarityButton(Var$1.Create$1(ClarityButtonSpec.New(ClarityButtonType.Flat,false,ButtonSize.Small,a.Text)),a.Action);
+  }
+  blocks=Doc.Concat(List.map(function(b)
+  {
+   return Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-title")],[Doc.TextNode(b.Title)]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(b.Text)])]);
+  },cbc.Blocks));
+  acts=cbc.Actions.get_Length()<=2?Doc.Concat(List.map(act,cbc.Actions)):Doc.Concat(Seq.map(act,Seq.take(2,cbc.Actions)));
+  return Doc.Element("div",[AttrProxy.Create("class","card")],[Doc.Element("div",[AttrProxy.Create("class","card-header")],[Doc.TextNode(cbc.Heading)]),blocks,Doc.Element("div",[AttrProxy.Create("class","card-footer")],[acts])]);
  };
  Clarity.ClarityDatePicker=function(cdp)
  {
@@ -937,7 +976,7 @@
    {
     return ClarityButtonSpec.New($1.Type,$2,$1.Size,$1.Text);
    }).Set(true);
-  }),Clarity.ClarityDatePicker(Client.cdp())])])]),Doc.Input([],rvInput),Doc.Button("Send",[],function()
+  }),Clarity.ClarityDatePicker(Client.cdp()),Clarity.ClarityBasicCard(Client.cbcv())])])]),Doc.Input([],rvInput),Doc.Button("Send",[],function()
   {
    submit.Trigger();
   }),Doc.Button("Get",[],function()
@@ -1011,6 +1050,11 @@
  {
   SC$2.$cctor();
   return SC$2.pv;
+ };
+ Client.cbcv=function()
+ {
+  SC$2.$cctor();
+  return SC$2.cbcv;
  };
  Client.cdp=function()
  {
@@ -1160,6 +1204,13 @@
   },Client.mmm().v);
   SC$2.but1=Var$1.Create$1(ClarityButtonSpec.New(ClarityButtonType.Danger,false,ButtonSize.Small,"Press Me!"));
   SC$2.cdp=Var$1.Create$1(ClarityDatePickerVar.New("",3,2019,24));
+  SC$2.cbcv=ClarityBasicCardVar.New("Header",List.ofArray([ClarityCardBlock.New("Block","Card content can contain text, links, images, data visualizations, lists and more.")]),List.ofArray([ClarityAction.New("Footer Action 1",function()
+  {
+   console.log("Action 1 hit");
+  }),ClarityAction.New("Footer Action 2",function()
+  {
+   console.log("Action 2 hit");
+  })]));
   SC$2.pv=View.Map(function($1)
   {
    return $1.Label;

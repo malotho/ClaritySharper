@@ -107,6 +107,26 @@ module Client =
         Month = 3
         Day = 24
     }
+
+    let cbcv = {
+        Heading = "Header"
+        Blocks = [
+            {
+                Title = "Block"
+                Text = "Card content can contain text, links, images, data visualizations, lists and more."
+            }
+        ]
+        Actions = [
+            {
+                Text = "Footer Action 1"
+                Action = fun () -> JavaScript.Console.Log("Action 1 hit")
+            };
+             {
+                Text = "Footer Action 2"
+                Action = fun () -> JavaScript.Console.Log("Action 2 hit")
+            }
+       ]
+    }
     
 
     let pv = V(civV.V.Label)
@@ -192,6 +212,7 @@ module Client =
                         ]
                         ClarityButton but1 (fun () -> (Lens but1.V.Disabled).Value <- true )
                         ClarityDatePicker cdp
+                        ClarityBasicCard cbcv
                     ]
                 ]
             ]
