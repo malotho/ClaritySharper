@@ -447,5 +447,40 @@ module Clarity =
         ]
         cc
 
+    type ClarityBasicCardVar = {
+        Heading: string
+        Blocks: ClarityCardBlock list
+        Actions: ClarityAction list
+    } 
+    and ClarityCardBlock = {
+        Title: string
+        Text: string
+    }
+    and ClarityAction = {
+        Text: string
+        Action: (unit->unit)
+    }
+
+    let ClarityBasicCard (cbc:ClarityBasicCardVar) =
+        let block (b:ClarityCardBlock) =
+            div [attr.``class`` "card-block"][
+                div [attr.``class`` "card-title"] [text b.Title]
+                div [attr.``class`` "card-text"] [text b.Text]
+            ]
+        let blocks = List.map block cbc.Blocks |> Doc.Concat
+        let act (a:ClarityAction) =
+            ClarityButton (Var.Create {Type=Flat; Disabled=false;Size=Small;Text=a.Text}) a.Action
+        let acts =  match cbc.Actions.Length with
+            | a when a <=2 -> cbc.Actions |> List.map act |> Doc.Concat
+            | _ -> cbc.Actions |> Seq.take 2 |> Seq.map act |> Doc.Concat
+        div [attr.``class`` "card"] [
+            div [attr.``class`` "card-header"][text cbc.Heading]
+            blocks
+            div [attr.``class`` "card-footer"] [
+                acts
+            ]
+        ]
+
+
 
         
