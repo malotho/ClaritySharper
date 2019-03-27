@@ -101,6 +101,14 @@ module Client =
             Text = "Press Me!"
         }
 
+    let cdp = Var.Create {
+        TheDate = ""
+        Year = 2019
+        Month = 3
+        Day = 24
+    }
+    
+
     let pv = V(civV.V.Label)
 
     let its = Var.Create []
@@ -183,6 +191,7 @@ module Client =
                             Doc.TextView csvSel
                         ]
                         ClarityButton but1 (fun () -> (Lens but1.V.Disabled).Value <- true )
+                        ClarityDatePicker cdp
                     ]
                 ]
             ]
