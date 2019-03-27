@@ -124,6 +124,14 @@ module Client =
              {
                 Text = "Footer Action 2"
                 Action = fun () -> JavaScript.Console.Log("Action 2 hit")
+            };
+             {
+                Text = "Footer Action 3"
+                Action = fun () -> JavaScript.Console.Log("Action 3 hit")
+            };
+             {
+                Text = "Footer Action 4"
+                Action = fun () -> JavaScript.Console.Log("Action 4 hit")
             }
        ]
     }
@@ -181,6 +189,9 @@ module Client =
                 | Some input -> Server.DoSomething input
             )
         div [] [
+            ClarityDatePicker cdp
+            ClarityBasicCard cbcv
+
             div [attr.``class`` "login-wrapper"] [
                 form [attr.``class`` "login"] [
                     section [attr.``class`` "title"] [
@@ -211,8 +222,6 @@ module Client =
                             Doc.TextView csvSel
                         ]
                         ClarityButton but1 (fun () -> (Lens but1.V.Disabled).Value <- true )
-                        ClarityDatePicker cdp
-                        ClarityBasicCard cbcv
                     ]
                 ]
             ]
