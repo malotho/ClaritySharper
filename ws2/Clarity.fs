@@ -86,6 +86,12 @@ module Clarity =
     
     let ButtonSizePred = Attr.DynamicClassPred "btn-sm"
 
+    let ClarityRow children =
+        div [attr.``class`` "clr-row"] children
+
+    let ClarityColumn4 children =
+        div [attr.``class`` "clr-col-4"] children
+
     let ClarityButton (spec:Var<ClarityButtonSpec>) callback = 
         let ButtonClass t = 
             match t with 
