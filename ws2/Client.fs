@@ -190,8 +190,17 @@ module Client =
                 | Some input -> Server.DoSomething input
             )
         div [] [
-            ClarityDatePicker cdp
-            ClarityBasicCard cbcv
+            ClarityRow [
+                ClarityColumn [ColumnWidthExtraSmall 4] [
+                    span [attr.style "justify-content: center;display:flex"] [text "4"]
+                ]
+                ClarityColumn [ColumnWidthExtraSmall 4] [
+                    ClarityDatePicker cdp
+                ]
+                ClarityColumn [ColumnWidthExtraSmall 4] [
+                    ClarityBasicCard cbcv
+                ]
+            ]
 
             div [attr.``class`` "login-wrapper"] [
                 form [attr.``class`` "login"] [
