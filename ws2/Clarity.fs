@@ -89,8 +89,26 @@ module Clarity =
     let ClarityRow children =
         div [attr.``class`` "clr-row"] children
 
-    let ClarityColumn4 children =
-        div [attr.``class`` "clr-col-4"] children
+    let ColumnWidthExtraSmall n =
+        attr.``class`` ("clr-col-" + n.ToString())
+
+    let ColumnWidthSmall n =
+        attr.``class`` ("clr-col-sm-" + n.ToString())
+    
+    let ColumnWidthMedium n =
+        attr.``class`` ("clr-col-md-" + n.ToString())
+    
+    let ColumnWidthLarge n =
+        attr.``class`` ("clr-col-lg-" + n.ToString())
+    
+    let ColumnWidthExtraLarge n =
+        attr.``class`` ("clr-col-xl-" + n.ToString())
+    
+
+
+
+    let ClarityColumn columnWidths children =
+        div columnWidths children
 
     let ClarityButton (spec:Var<ClarityButtonSpec>) callback = 
         let ButtonClass t = 

@@ -191,13 +191,13 @@ module Client =
             )
         div [] [
             ClarityRow [
-                ClarityColumn4 [
+                ClarityColumn [ColumnWidthExtraSmall 4] [
                     span [attr.style "justify-content: center;display:flex"] [text "4"]
                 ]
-                ClarityColumn4 [
+                ClarityColumn [ColumnWidthExtraSmall 4] [
                     ClarityDatePicker cdp
                 ]
-                ClarityColumn4 [
+                ClarityColumn [ColumnWidthExtraSmall 4] [
                     ClarityBasicCard cbcv
                 ]
             ]
