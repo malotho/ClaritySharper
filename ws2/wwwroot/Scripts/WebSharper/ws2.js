@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,DatePickerType,DatePickerViewManager,ClarityBasicCardVar,ClarityCardBlock,ClarityAction,SC$1,Client,SC$2,ws2_Templates,WebSharper,Unchecked,UI,Var$1,Doc,List,AttrProxy,Seq,AttrModule,Operators,DateUtil,Date,Math,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
+ var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,ColumnDef,ClarityColumnWidth,DatePickerType,DatePickerViewManager,ClarityBasicCardVar,ClarityCardBlock,ClarityAction,SC$1,Client,SC$2,ws2_Templates,WebSharper,Unchecked,UI,Var$1,Doc,List,AttrProxy,Seq,AttrModule,Operators,DateUtil,Date,Math,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
  Global=self;
  ws2=Global.ws2=Global.ws2||{};
  Clarity=ws2.Clarity=ws2.Clarity||{};
@@ -13,6 +13,8 @@
  ClarityButtonSpec=Clarity.ClarityButtonSpec=Clarity.ClarityButtonSpec||{};
  ButtonSize=Clarity.ButtonSize=Clarity.ButtonSize||{};
  ClarityDatePickerVar=Clarity.ClarityDatePickerVar=Clarity.ClarityDatePickerVar||{};
+ ColumnDef=Clarity.ColumnDef=Clarity.ColumnDef||{};
+ ClarityColumnWidth=Clarity.ClarityColumnWidth=Clarity.ClarityColumnWidth||{};
  DatePickerType=Clarity.DatePickerType=Clarity.DatePickerType||{};
  DatePickerViewManager=Clarity.DatePickerViewManager=Clarity.DatePickerViewManager||{};
  ClarityBasicCardVar=Clarity.ClarityBasicCardVar=Clarity.ClarityBasicCardVar||{};
@@ -155,6 +157,28 @@
    Year:Year,
    Day:Day
   };
+ };
+ ColumnDef.New=function(Quantity,ColumnWidth)
+ {
+  return{
+   Quantity:Quantity,
+   ColumnWidth:ColumnWidth
+  };
+ };
+ ClarityColumnWidth.ExtraLarge={
+  $:4
+ };
+ ClarityColumnWidth.Large={
+  $:3
+ };
+ ClarityColumnWidth.Medium={
+  $:2
+ };
+ ClarityColumnWidth.Small={
+  $:1
+ };
+ ClarityColumnWidth.ExtraSmall={
+  $:0
  };
  DatePickerType.YearPicker={
   $:3
@@ -772,7 +796,7 @@
              if(m===12)
               return"Dec";
              else
-              throw new MatchFailureException.New("Clarity.fs",237,14);
+              throw new MatchFailureException.New("Clarity.fs",274,14);
  };
  Clarity.ClarityDateContainer=function(children)
  {
@@ -989,9 +1013,34 @@
   },spec.get_View()));
   return Doc.Button(spec.Get().Text,[AttrProxy.Create("class",classes),((Clarity.AttrDisabledDyn())(vpred))(vstr),(Clarity.ButtonSizePred())(vsize)],callback);
  };
- Clarity.ClarityColumn4=function(children)
+ Clarity.ClarityColumn=function(columnWidths,children)
  {
-  return Doc.Element("div",[AttrProxy.Create("class","clr-col-4")],children);
+  return Doc.Element("div",Seq.map(function(w)
+  {
+   var m;
+   m=w.ColumnWidth;
+   return m.$==1?Clarity.ColumnWidthSmall(w.Quantity):m.$==2?Clarity.ColumnWidthMedium(w.Quantity):m.$==3?Clarity.ColumnWidthLarge(w.Quantity):m.$==4?Clarity.ColumnWidthExtraLarge(w.Quantity):Clarity.ColumnWidthExtraSmall(w.Quantity);
+  },columnWidths),children);
+ };
+ Clarity.ColumnWidthExtraLarge=function(n)
+ {
+  return AttrProxy.Create("class","clr-col-xl-"+Global.String(n));
+ };
+ Clarity.ColumnWidthLarge=function(n)
+ {
+  return AttrProxy.Create("class","clr-col-lg-"+Global.String(n));
+ };
+ Clarity.ColumnWidthMedium=function(n)
+ {
+  return AttrProxy.Create("class","clr-col-md-"+Global.String(n));
+ };
+ Clarity.ColumnWidthSmall=function(n)
+ {
+  return AttrProxy.Create("class","clr-col-sm-"+Global.String(n));
+ };
+ Clarity.ColumnWidthExtraSmall=function(n)
+ {
+  return AttrProxy.Create("class","clr-col-"+Global.String(n));
  };
  Clarity.ClarityRow=function(children)
  {
@@ -1034,7 +1083,7 @@
     return Concurrency.Return("");
    }));
   },submit.view);
-  return Doc.Element("div",[],[Clarity.ClarityRow([Clarity.ClarityColumn4([Doc.Element("span",[AttrProxy.Create("style","justify-content: center;display:flex")],[Doc.TextNode("4")])]),Clarity.ClarityColumn4([Clarity.ClarityDatePicker(Client.cdp())]),Clarity.ClarityColumn4([Clarity.ClarityBasicCard(Client.cbcv())])]),Doc.Element("div",[AttrProxy.Create("class","login-wrapper")],[Doc.Element("form",[AttrProxy.Create("class","login")],[Doc.Element("section",[AttrProxy.Create("class","title")],[Doc.Element("h3",[AttrProxy.Create("class","welcome")],[Doc.TextNode("Welcome to")]),Doc.TextNode("Company Product Name"),Doc.Element("h5",[AttrProxy.Create("class","hint")],[Doc.TextNode("Use your Company ID to sign in or create one now")])]),Doc.Element("div",[AttrProxy.Create("class","login-group")],[Doc.Element("div",[AttrProxy.Create("class","clr-control-container clr-form-control")],[Doc.Element("div",[AttrProxy.Create("class","clr-select-wrapper")],[Doc.Element("select",[],[Doc.Element("option",[AttrProxy.Create("value","local")],[Doc.TextNode("Local Users")]),Doc.Element("option",[AttrProxy.Create("value","admin")],[Doc.TextNode("Administrator")])])])]),Clarity.ClarityInput(List.T.Empty,Client.username()),Clarity.ClarityPassword(List.T.Empty,Client.password()),Doc.Element("div",[],[Doc.TextView(Client.sel().get_View()),Doc.TextView(Var$1.Lens(Client.username(),function($1)
+  return Doc.Element("div",[],[Clarity.ClarityRow([Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Doc.Element("span",[AttrProxy.Create("style","justify-content: center;display:flex")],[Doc.TextNode("4")])]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityDatePicker(Client.cdp())]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityBasicCard(Client.cbcv())])]),Doc.Element("div",[AttrProxy.Create("class","login-wrapper")],[Doc.Element("form",[AttrProxy.Create("class","login")],[Doc.Element("section",[AttrProxy.Create("class","title")],[Doc.Element("h3",[AttrProxy.Create("class","welcome")],[Doc.TextNode("Welcome to")]),Doc.TextNode("Company Product Name"),Doc.Element("h5",[AttrProxy.Create("class","hint")],[Doc.TextNode("Use your Company ID to sign in or create one now")])]),Doc.Element("div",[AttrProxy.Create("class","login-group")],[Doc.Element("div",[AttrProxy.Create("class","clr-control-container clr-form-control")],[Doc.Element("div",[AttrProxy.Create("class","clr-select-wrapper")],[Doc.Element("select",[],[Doc.Element("option",[AttrProxy.Create("value","local")],[Doc.TextNode("Local Users")]),Doc.Element("option",[AttrProxy.Create("value","admin")],[Doc.TextNode("Administrator")])])])]),Clarity.ClarityInput(List.T.Empty,Client.username()),Clarity.ClarityPassword(List.T.Empty,Client.password()),Doc.Element("div",[],[Doc.TextView(Client.sel().get_View()),Doc.TextView(Var$1.Lens(Client.username(),function($1)
   {
    return $1.Value;
   },function($1,$2)

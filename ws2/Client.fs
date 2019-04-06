@@ -97,7 +97,7 @@ module Client =
     let but1 = Var.Create {
             Type = Danger
             Disabled = false
-            Size = Small
+            Size = ButtonSize.Small
             Text = "Press Me!"
         }
 
@@ -191,13 +191,13 @@ module Client =
             )
         div [] [
             ClarityRow [
-                ClarityColumn [ColumnWidthExtraSmall 4] [
+                ClarityColumn [{ColumnWidth=ExtraSmall; Quantity=4}] [
                     span [attr.style "justify-content: center;display:flex"] [text "4"]
                 ]
-                ClarityColumn [ColumnWidthExtraSmall 4] [
+                ClarityColumn [{ColumnWidth=ExtraSmall; Quantity=4}] [
                     ClarityDatePicker cdp
                 ]
-                ClarityColumn [ColumnWidthExtraSmall 4] [
+                ClarityColumn [{ColumnWidth=ExtraSmall; Quantity=4}] [
                     ClarityBasicCard cbcv
                 ]
             ]

@@ -105,10 +105,29 @@ module Clarity =
         attr.``class`` ("clr-col-xl-" + n.ToString())
     
 
+    type ColumnDef = {
+        Quantity: int
+        ColumnWidth: ClarityColumnWidth
+    } 
+    and ClarityColumnWidth =
+        | ExtraSmall
+        | Small
+        | Medium
+        | Large
+        | ExtraLarge
 
+
+    
 
     let ClarityColumn columnWidths children =
-        div columnWidths children
+        let mapper (w:ColumnDef) = 
+            match w.ColumnWidth with
+                | ExtraSmall -> ColumnWidthExtraSmall w.Quantity
+                | Small -> ColumnWidthSmall w.Quantity
+                | Medium -> ColumnWidthMedium w.Quantity
+                | Large -> ColumnWidthLarge w.Quantity
+                | ExtraLarge -> ColumnWidthExtraLarge w.Quantity
+        div (Seq.map mapper columnWidths) children
 
     let ClarityButton (spec:Var<ClarityButtonSpec>) callback = 
         let ButtonClass t = 
@@ -130,7 +149,7 @@ module Clarity =
         let vstr = (Var.Create "").View
         let vsize = V(spec.V.Size).Map (fun p -> 
             match p with
-                | Small -> true
+                | ButtonSize.Small -> true
                 | Normal -> false
             )
         Doc.Button spec.Value.Text [attr.``class`` classes; (AttrDisabledDyn vpred vstr); ButtonSizePred vsize] callback
@@ -515,7 +534,7 @@ module Clarity =
             ]
         let blocks = List.map block cbc.Blocks |> Doc.Concat
         let act (a:ClarityAction) =
-            ClarityButton (Var.Create {Type=Flat; Disabled=false;Size=Small;Text=a.Text}) a.Action
+            ClarityButton (Var.Create {Type=Flat; Disabled=false;Size=ButtonSize.Small;Text=a.Text}) a.Action
         let acts = match cbc.Actions.Length with
                     | a when a <=2 -> cbc.Actions |> List.map act |> Doc.Concat
                     | _ -> cbc.Actions |> Seq.take 2 |> Seq.map act |> Doc.Concat
