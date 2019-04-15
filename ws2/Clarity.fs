@@ -494,25 +494,44 @@ module Clarity =
         ]
         cc
 
-    type ClarityBasicCardVar = {
-        Heading: string
-        Blocks: ClarityCardBlock list
-        Actions: ClarityAction list
-        MainAction: (unit->unit) option
-    } 
-    and ClarityCardBlock = {
+
+    type ClarityCardBlock = {
         Title: string
         Text: string
     }
+
+    type ClarityImage = {
+        Source: string
+        Alt: string
+    }
+
+    type ClarityBasicCardVar = {
+        Heading: string
+        Blocks: ClarityCardContent list
+        Actions: ClarityAction list
+        MainAction: (unit->unit) option
+    } 
+    and ClarityCardContent =
+        | ClarityCardBlockPart of ClarityCardBlock
+        | ClarityImagePart of ClarityImage
     and ClarityAction = {
         Text: string
         Action: (unit->unit)
     }
 
+    type ClarityImageCardVar = {
+        MainAction: (unit->unit) option
+        MainImage: ClarityImage option
+    }
+
+    type ClarityCardVar = 
+        | ClarityBasicCardVarPart of ClarityBasicCardVar
+        | ClarityImageCardVarPart of ClarityImageCardVar
+
+
     let ClarityBasicCard (cbc:ClarityBasicCardVar) =
 
         let mo = Var.Create false 
-        let clickable = Var.Create (match cbc.MainAction with | Some(v) -> true | None -> false)
         let rec listen (evt:Dom.Event) =
             let myel = JS.Document.GetElementById("carddrop")
             let myel2 = JS.Document.GetElementById("carddropmenu")
@@ -526,12 +545,19 @@ module Clarity =
             ()
 
         let MenuOpenPred = Attr.DynamicClassPred "open"
-        let ClickablePred = Attr.DynamicClassPred "clickable"
-        let block (b:ClarityCardBlock) =
+        let renderImage b =
+            div [attr.``class`` "card-img"] [
+                img [attr.src b.Source; attr.alt b.Alt] []
+            ]
+        let renderCardBlock b =
             div [attr.``class`` "card-block"][
                 div [attr.``class`` "card-title"] [text b.Title]
                 div [attr.``class`` "card-text"] [text b.Text]
             ]
+        let block (b) =
+            match b with
+                | ClarityCardBlockPart bb -> (renderCardBlock bb)
+                | ClarityImagePart bb -> (renderImage bb)
         let blocks = List.map block cbc.Blocks |> Doc.Concat
         let act (a:ClarityAction) =
             ClarityButton (Var.Create {Type=Flat; Disabled=false;Size=ButtonSize.Small;Text=a.Text}) a.Action
@@ -554,17 +580,27 @@ module Clarity =
             dd
         let carddiv () =
             match cbc.MainAction with
-                | Some(v) -> div [attr.``class`` "card clickable";Attr.Handler "click" (fun a b -> (cbc.MainAction.Value()))]
+                | Some(v) -> div [attr.``class`` "card clickable";Attr.Handler "click" (fun a b -> (v()))]
                 | None -> div [attr.``class`` "card"]
+        
         carddiv() [
-            div [attr.``class`` "card-header"][text cbc.Heading]
-            blocks
-            div [attr.``class`` "card-footer"] [
-                acts
-                (if cbc.Actions.Length > 2 then drops else Doc.Verbatim "")
-            ]
-        ]
+                    div [attr.``class`` "card-header"][text cbc.Heading]
+                    blocks
+                    div [attr.``class`` "card-footer"] [
+                        acts
+                        (if cbc.Actions.Length > 2 then drops else Doc.Verbatim "")
+                    ]
+                ]
 
+    let ClarityImageCard (cic:ClarityImageCardVar) =
+        match cic.MainAction with
+            | Some(v) -> div [attr.``class`` "card clickable card-img";Attr.Handler "click" (fun a b -> (v()))] [img [attr.src cic.MainImage.Value.Source;attr.alt cic.MainImage.Value.Alt][]]
+            | None -> div [attr.``class`` "card card-img"] [img [attr.src cic.MainImage.Value.Source;attr.alt cic.MainImage.Value.Alt][]]
+
+    let ClarityCard (cc:ClarityCardVar) =
+        match cc with
+            | ClarityBasicCardVarPart c -> ClarityBasicCard c
+            | ClarityImageCardVarPart c -> ClarityImageCard c
 
 
         

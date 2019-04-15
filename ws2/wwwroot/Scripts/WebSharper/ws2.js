@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,ColumnDef,ClarityColumnWidth,DatePickerType,DatePickerViewManager,ClarityBasicCardVar,ClarityCardBlock,ClarityAction,SC$1,Client,SC$2,ws2_Templates,WebSharper,Unchecked,UI,Var$1,Doc,List,AttrProxy,Seq,AttrModule,Operators,DateUtil,Date,Math,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
+ var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,ColumnDef,ClarityColumnWidth,DatePickerType,DatePickerViewManager,ClarityCardBlock,ClarityImage,ClarityBasicCardVar,ClarityAction,ClarityImageCardVar,SC$1,Client,SC$2,ws2_Templates,WebSharper,UI,Doc,AttrProxy,AttrModule,Unchecked,Var$1,List,Seq,Operators,DateUtil,Date,Math,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
  Global=self;
  ws2=Global.ws2=Global.ws2||{};
  Clarity=ws2.Clarity=ws2.Clarity||{};
@@ -17,22 +17,24 @@
  ClarityColumnWidth=Clarity.ClarityColumnWidth=Clarity.ClarityColumnWidth||{};
  DatePickerType=Clarity.DatePickerType=Clarity.DatePickerType||{};
  DatePickerViewManager=Clarity.DatePickerViewManager=Clarity.DatePickerViewManager||{};
- ClarityBasicCardVar=Clarity.ClarityBasicCardVar=Clarity.ClarityBasicCardVar||{};
  ClarityCardBlock=Clarity.ClarityCardBlock=Clarity.ClarityCardBlock||{};
+ ClarityImage=Clarity.ClarityImage=Clarity.ClarityImage||{};
+ ClarityBasicCardVar=Clarity.ClarityBasicCardVar=Clarity.ClarityBasicCardVar||{};
  ClarityAction=Clarity.ClarityAction=Clarity.ClarityAction||{};
+ ClarityImageCardVar=Clarity.ClarityImageCardVar=Clarity.ClarityImageCardVar||{};
  SC$1=Global.StartupCode$ws2$Clarity=Global.StartupCode$ws2$Clarity||{};
  Client=ws2.Client=ws2.Client||{};
  SC$2=Global.StartupCode$ws2$Client=Global.StartupCode$ws2$Client||{};
  ws2_Templates=Global.ws2_Templates=Global.ws2_Templates||{};
  WebSharper=Global.WebSharper;
- Unchecked=WebSharper&&WebSharper.Unchecked;
  UI=WebSharper&&WebSharper.UI;
- Var$1=UI&&UI.Var$1;
  Doc=UI&&UI.Doc;
- List=WebSharper&&WebSharper.List;
  AttrProxy=UI&&UI.AttrProxy;
- Seq=WebSharper&&WebSharper.Seq;
  AttrModule=UI&&UI.AttrModule;
+ Unchecked=WebSharper&&WebSharper.Unchecked;
+ Var$1=UI&&UI.Var$1;
+ List=WebSharper&&WebSharper.List;
+ Seq=WebSharper&&WebSharper.Seq;
  Operators=WebSharper&&WebSharper.Operators;
  DateUtil=WebSharper&&WebSharper.DateUtil;
  Date=Global.Date;
@@ -198,6 +200,20 @@
    CurrentView:CurrentView
   };
  };
+ ClarityCardBlock.New=function(Title,Text)
+ {
+  return{
+   Title:Title,
+   Text:Text
+  };
+ };
+ ClarityImage.New=function(Source,Alt)
+ {
+  return{
+   Source:Source,
+   Alt:Alt
+  };
+ };
  ClarityBasicCardVar.New=function(Heading,Blocks,Actions,MainAction)
  {
   return{
@@ -207,19 +223,35 @@
    MainAction:MainAction
   };
  };
- ClarityCardBlock.New=function(Title,Text)
- {
-  return{
-   Title:Title,
-   Text:Text
-  };
- };
  ClarityAction.New=function(Text,Action)
  {
   return{
    Text:Text,
    Action:Action
   };
+ };
+ ClarityImageCardVar.New=function(MainAction,MainImage)
+ {
+  return{
+   MainAction:MainAction,
+   MainImage:MainImage
+  };
+ };
+ Clarity.ClarityCard=function(cc)
+ {
+  return cc.$==1?Clarity.ClarityImageCard(cc.$0):Clarity.ClarityBasicCard(cc.$0);
+ };
+ Clarity.ClarityImageCard=function(cic)
+ {
+  var m,v;
+  m=cic.MainAction;
+  return m==null?Doc.Element("div",[AttrProxy.Create("class","card card-img")],[Doc.Element("img",[AttrProxy.Create("src",cic.MainImage.$0.Source),AttrProxy.Create("alt",cic.MainImage.$0.Alt)],[])]):(v=m.$0,Doc.Element("div",[AttrProxy.Create("class","card clickable card-img"),AttrModule.Handler("click",function()
+  {
+   return function()
+   {
+    return v();
+   };
+  })],[Doc.Element("img",[AttrProxy.Create("src",cic.MainImage.$0.Source),AttrProxy.Create("alt",cic.MainImage.$0.Alt)],[])]));
  };
  Clarity.ClarityBasicCard=function(cbc)
  {
@@ -252,15 +284,22 @@
        }
    }(myel2,target):void 0;
   }
+  function renderImage(b)
+  {
+   return Doc.Element("div",[AttrProxy.Create("class","card-img")],[Doc.Element("img",[AttrProxy.Create("src",b.Source),AttrProxy.Create("alt",b.Alt)],[])]);
+  }
+  function renderCardBlock(b)
+  {
+   return Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-title")],[Doc.TextNode(b.Title)]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(b.Text)])]);
+  }
   function act(a)
   {
    return Clarity.ClarityButton(Var$1.Create$1(ClarityButtonSpec.New(ClarityButtonType.Flat,false,ButtonSize.Small,a.Text)),a.Action);
   }
   mo=Var$1.Create$1(false);
-  Var$1.Create$1(cbc.MainAction!=null);
   blocks=Doc.Concat(List.map(function(b)
   {
-   return Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-title")],[Doc.TextNode(b.Title)]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(b.Text)])]);
+   return b.$==1?renderImage(b.$0):renderCardBlock(b.$0);
   },cbc.Blocks));
   acts=cbc.Actions.get_Length()<=2?Doc.Concat(List.map(act,cbc.Actions)):Doc.Concat(Seq.map(act,Seq.take(2,cbc.Actions)));
   drops=(links=Doc.Concat(Seq.map(function(aa)
@@ -283,20 +322,21 @@
   })],[Doc.TextNode("Dropdown 1"),Doc.Element("clr-icon",List.ofArray([AttrProxy.Create("shape","caret down")]),List.T.Empty)]),Doc.Element("div",[AttrProxy.Create("class","dropdown-menu"),AttrProxy.Create("id","carddropmenu")],[links])]));
   return(function()
   {
-   var a,a$1;
-   return cbc.MainAction==null?(a=List.ofArray([AttrProxy.Create("class","card")]),function(c)
+   var m,a,v,a$1;
+   m=cbc.MainAction;
+   return m==null?(a=List.ofArray([AttrProxy.Create("class","card")]),function(c)
    {
     return Doc.Element("div",a,c);
-   }):(a$1=List.ofArray([AttrProxy.Create("class","card clickable"),AttrModule.Handler("click",function()
+   }):(v=m.$0,(a$1=List.ofArray([AttrProxy.Create("class","card clickable"),AttrModule.Handler("click",function()
    {
     return function()
     {
-     return cbc.MainAction.$0();
+     return v();
     };
    })]),function(c)
    {
     return Doc.Element("div",a$1,c);
-   });
+   }));
   }(null))(List.ofArray([Doc.Element("div",[AttrProxy.Create("class","card-header")],[Doc.TextNode(cbc.Heading)]),blocks,Doc.Element("div",[AttrProxy.Create("class","card-footer")],[acts,cbc.Actions.get_Length()>2?drops:Doc.Verbatim("")])]));
  };
  Clarity.ClarityDatePicker=function(cdp)
@@ -1083,7 +1123,7 @@
     return Concurrency.Return("");
    }));
   },submit.view);
-  return Doc.Element("div",[],[Clarity.ClarityRow([Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Doc.Element("span",[AttrProxy.Create("style","justify-content: center;display:flex")],[Doc.TextNode("4")])]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityDatePicker(Client.cdp())]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityBasicCard(Client.cbcv())])]),Doc.Element("div",[AttrProxy.Create("class","login-wrapper")],[Doc.Element("form",[AttrProxy.Create("class","login")],[Doc.Element("section",[AttrProxy.Create("class","title")],[Doc.Element("h3",[AttrProxy.Create("class","welcome")],[Doc.TextNode("Welcome to")]),Doc.TextNode("Company Product Name"),Doc.Element("h5",[AttrProxy.Create("class","hint")],[Doc.TextNode("Use your Company ID to sign in or create one now")])]),Doc.Element("div",[AttrProxy.Create("class","login-group")],[Doc.Element("div",[AttrProxy.Create("class","clr-control-container clr-form-control")],[Doc.Element("div",[AttrProxy.Create("class","clr-select-wrapper")],[Doc.Element("select",[],[Doc.Element("option",[AttrProxy.Create("value","local")],[Doc.TextNode("Local Users")]),Doc.Element("option",[AttrProxy.Create("value","admin")],[Doc.TextNode("Administrator")])])])]),Clarity.ClarityInput(List.T.Empty,Client.username()),Clarity.ClarityPassword(List.T.Empty,Client.password()),Doc.Element("div",[],[Doc.TextView(Client.sel().get_View()),Doc.TextView(Var$1.Lens(Client.username(),function($1)
+  return Doc.Element("div",[],[Clarity.ClarityRow([Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Doc.Element("span",[AttrProxy.Create("style","justify-content: center;display:flex")],[Doc.TextNode("4")])]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityDatePicker(Client.cdp())]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityCard(Client.cbcv1())]),Clarity.ClarityColumn([ColumnDef.New(4,ClarityColumnWidth.ExtraSmall)],[Clarity.ClarityCard(Client.cbcv2())])]),Doc.Element("div",[AttrProxy.Create("class","login-wrapper")],[Doc.Element("form",[AttrProxy.Create("class","login")],[Doc.Element("section",[AttrProxy.Create("class","title")],[Doc.Element("h3",[AttrProxy.Create("class","welcome")],[Doc.TextNode("Welcome to")]),Doc.TextNode("Company Product Name"),Doc.Element("h5",[AttrProxy.Create("class","hint")],[Doc.TextNode("Use your Company ID to sign in or create one now")])]),Doc.Element("div",[AttrProxy.Create("class","login-group")],[Doc.Element("div",[AttrProxy.Create("class","clr-control-container clr-form-control")],[Doc.Element("div",[AttrProxy.Create("class","clr-select-wrapper")],[Doc.Element("select",[],[Doc.Element("option",[AttrProxy.Create("value","local")],[Doc.TextNode("Local Users")]),Doc.Element("option",[AttrProxy.Create("value","admin")],[Doc.TextNode("Administrator")])])])]),Clarity.ClarityInput(List.T.Empty,Client.username()),Clarity.ClarityPassword(List.T.Empty,Client.password()),Doc.Element("div",[],[Doc.TextView(Client.sel().get_View()),Doc.TextView(Var$1.Lens(Client.username(),function($1)
   {
    return $1.Value;
   },function($1,$2)
@@ -1173,10 +1213,15 @@
   SC$2.$cctor();
   return SC$2.pv;
  };
- Client.cbcv=function()
+ Client.cbcv2=function()
  {
   SC$2.$cctor();
-  return SC$2.cbcv;
+  return SC$2.cbcv2;
+ };
+ Client.cbcv1=function()
+ {
+  SC$2.$cctor();
+  return SC$2.cbcv1;
  };
  Client.cdp=function()
  {
@@ -1326,25 +1371,47 @@
   },Client.mmm().v);
   SC$2.but1=Var$1.Create$1(ClarityButtonSpec.New(ClarityButtonType.Danger,false,ButtonSize.Small,"Press Me!"));
   SC$2.cdp=Var$1.Create$1(ClarityDatePickerVar.New("",3,2019,24));
-  SC$2.cbcv=ClarityBasicCardVar.New("Header",List.ofArray([ClarityCardBlock.New("Block","Card content can contain text, links, images, data visualizations, lists and more.")]),List.ofArray([ClarityAction.New("Footer Action 1",function()
-  {
-   console.log("Action 1 hit");
-  }),ClarityAction.New("Footer Action 2",function()
-  {
-   console.log("Action 2 hit");
-  }),ClarityAction.New("Footer Action 3",function()
-  {
-   console.log("Action 3 hit");
-  }),ClarityAction.New("Footer Action 4",function()
-  {
-   console.log("Action 4 hit");
-  })]),{
-   $:1,
-   $0:function()
+  SC$2.cbcv1={
+   $:0,
+   $0:ClarityBasicCardVar.New("Header",List.ofArray([{
+    $:1,
+    $0:ClarityImage.New("/images/placeholder_350x150.png","")
+   },{
+    $:0,
+    $0:ClarityCardBlock.New("Block","Card content can contain text, links, images, data visualizations, lists and more.")
+   }]),List.ofArray([ClarityAction.New("Footer Action 1",function()
    {
-    console.log("Main Action hit");
-   }
-  });
+    console.log("Action 1 hit");
+   }),ClarityAction.New("Footer Action 2",function()
+   {
+    console.log("Action 2 hit");
+   }),ClarityAction.New("Footer Action 3",function()
+   {
+    console.log("Action 3 hit");
+   }),ClarityAction.New("Footer Action 4",function()
+   {
+    console.log("Action 4 hit");
+   })]),{
+    $:1,
+    $0:function()
+    {
+     console.log("Main Action hit");
+    }
+   })
+  };
+  SC$2.cbcv2={
+   $:1,
+   $0:ClarityImageCardVar.New({
+    $:1,
+    $0:function()
+    {
+     console.log("Main Action hit");
+    }
+   },{
+    $:1,
+    $0:ClarityImage.New("/images/placeholder_350x150.png","")
+   })
+  };
   SC$2.pv=View.Map(function($1)
   {
    return $1.Label;
