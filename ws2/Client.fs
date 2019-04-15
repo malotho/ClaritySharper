@@ -108,11 +108,15 @@ module Client =
         Day = 24
     }
 
-    let cbcv = {
+    let cbcv1 = ClarityBasicCardVarPart {
         Heading = "Header"
         MainAction = Some(fun () -> JavaScript.Console.Log("Main Action hit") )
         Blocks = [
-            {
+            ClarityImagePart {
+                Source = "/images/placeholder_350x150.png"
+                Alt = ""
+            }
+            ClarityCardBlockPart{
                 Title = "Block"
                 Text = "Card content can contain text, links, images, data visualizations, lists and more."
             }
@@ -136,6 +140,12 @@ module Client =
             }
        ]
     }
+
+    let cbcv2 =  ClarityImageCardVarPart {
+        MainAction = Some(fun () -> JavaScript.Console.Log("Main Action hit") )
+        MainImage = Some({Source = "/images/placeholder_350x150.png"; Alt = ""})
+    }
+
     
 
     let pv = V(civV.V.Label)
@@ -198,7 +208,10 @@ module Client =
                     ClarityDatePicker cdp
                 ]
                 ClarityColumn [{ColumnWidth=ExtraSmall; Quantity=4}] [
-                    ClarityBasicCard cbcv
+                    ClarityCard cbcv1
+                ]
+                ClarityColumn [{ColumnWidth=ExtraSmall; Quantity=4}] [
+                    ClarityCard cbcv2
                 ]
             ]
 
