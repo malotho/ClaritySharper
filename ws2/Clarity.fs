@@ -494,16 +494,22 @@ module Clarity =
         ]
         cc
 
-
-    type ClarityCardBlock = {
-        Title: string
-        Text: string
-    }
-
     type ClarityImage = {
         Source: string
         Alt: string
     }
+
+    type ClarityCardBlock = {
+        Title: string
+        Text: string
+        MediaBlock: CardMediaBlock option
+    }
+    and CardMediaBlock = {
+        Image: ClarityImage
+        Title: string
+        Text: string
+    }
+
 
     type ClarityBasicCardVar = {
         Heading: string
@@ -549,11 +555,24 @@ module Clarity =
             div [attr.``class`` "card-img"] [
                 img [attr.src b.Source; attr.alt b.Alt] []
             ]
-        let renderCardBlock b =
+        let renderCardBlockWithMedia cb =
             div [attr.``class`` "card-block"][
-                div [attr.``class`` "card-title"] [text b.Title]
-                div [attr.``class`` "card-text"] [text b.Text]
+                div [attr.``class`` "card-media-block"] [
+                    img [attr.``class`` "card-media-image";attr.src cb.MediaBlock.Value.Image.Source;attr.alt cb.MediaBlock.Value.Image.Alt] []
+                    div [attr.``class`` "card-media-description"] [
+                        span [attr.``class`` "card-media-title"] [text cb.MediaBlock.Value.Title]
+                        span [attr.``class`` "card-media-text"] [text cb.MediaBlock.Value.Text]
+                    ]
+                ]
+                div [attr.``class`` "card-text"] [text cb.Text]
             ]
+        let renderCardBlock (b:ClarityCardBlock) =
+            match b.MediaBlock with
+                | Some(mb) -> renderCardBlockWithMedia b
+                | None -> div [attr.``class`` "card-block"][
+                        div [attr.``class`` "card-title"] [text b.Title]
+                        div [attr.``class`` "card-text"] [text b.Text]
+                    ]
         let block (b) =
             match b with
                 | ClarityCardBlockPart bb -> (renderCardBlock bb)
