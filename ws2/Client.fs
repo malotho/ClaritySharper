@@ -119,6 +119,14 @@ module Client =
             ClarityCardBlockPart{
                 Title = "Block"
                 Text = "Card content can contain text, links, images, data visualizations, lists and more."
+                MediaBlock = Some({
+                    Title = "Project A"
+                    Text = "John Doe"
+                    Image = {
+                        Source = "/images/placeholder_60x60.png"
+                        Alt = ""
+                    }
+                })
             }
         ]
         Actions = [

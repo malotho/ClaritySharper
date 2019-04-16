@@ -1,7 +1,7 @@
 (function()
 {
  "use strict";
- var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,ColumnDef,ClarityColumnWidth,DatePickerType,DatePickerViewManager,ClarityCardBlock,ClarityImage,ClarityBasicCardVar,ClarityAction,ClarityImageCardVar,SC$1,Client,SC$2,ws2_Templates,WebSharper,UI,Doc,AttrProxy,AttrModule,Unchecked,Var$1,List,Seq,Operators,DateUtil,Date,Math,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
+ var Global,ws2,Clarity,ClarityButtonType,ClaritySelectVar,ClarityInputVar,ClarityCheckboxItem,ClarityCheckboxVar,ClarityButtonSpec,ButtonSize,ClarityDatePickerVar,ColumnDef,ClarityColumnWidth,DatePickerType,DatePickerViewManager,ClarityImage,ClarityCardBlock,CardMediaBlock,ClarityBasicCardVar,ClarityAction,ClarityImageCardVar,SC$1,Client,SC$2,ws2_Templates,WebSharper,UI,Doc,AttrProxy,AttrModule,Unchecked,Var$1,List,Seq,Operators,DateUtil,Date,Math,View,MatchFailureException,Utils,Strings,IntelliFactory,Runtime,Submitter,Remoting,AjaxRemotingProvider,Concurrency,Templating,Runtime$1,Server,ProviderBuilder,Handler,TemplateInstance,console,Enumerator,ListModel,Client$1,Templates,DomUtility;
  Global=self;
  ws2=Global.ws2=Global.ws2||{};
  Clarity=ws2.Clarity=ws2.Clarity||{};
@@ -17,8 +17,9 @@
  ClarityColumnWidth=Clarity.ClarityColumnWidth=Clarity.ClarityColumnWidth||{};
  DatePickerType=Clarity.DatePickerType=Clarity.DatePickerType||{};
  DatePickerViewManager=Clarity.DatePickerViewManager=Clarity.DatePickerViewManager||{};
- ClarityCardBlock=Clarity.ClarityCardBlock=Clarity.ClarityCardBlock||{};
  ClarityImage=Clarity.ClarityImage=Clarity.ClarityImage||{};
+ ClarityCardBlock=Clarity.ClarityCardBlock=Clarity.ClarityCardBlock||{};
+ CardMediaBlock=Clarity.CardMediaBlock=Clarity.CardMediaBlock||{};
  ClarityBasicCardVar=Clarity.ClarityBasicCardVar=Clarity.ClarityBasicCardVar||{};
  ClarityAction=Clarity.ClarityAction=Clarity.ClarityAction||{};
  ClarityImageCardVar=Clarity.ClarityImageCardVar=Clarity.ClarityImageCardVar||{};
@@ -200,18 +201,27 @@
    CurrentView:CurrentView
   };
  };
- ClarityCardBlock.New=function(Title,Text)
- {
-  return{
-   Title:Title,
-   Text:Text
-  };
- };
  ClarityImage.New=function(Source,Alt)
  {
   return{
    Source:Source,
    Alt:Alt
+  };
+ };
+ ClarityCardBlock.New=function(Title,Text,MediaBlock)
+ {
+  return{
+   Title:Title,
+   Text:Text,
+   MediaBlock:MediaBlock
+  };
+ };
+ CardMediaBlock.New=function(Image,Title,Text)
+ {
+  return{
+   Image:Image,
+   Title:Title,
+   Text:Text
   };
  };
  ClarityBasicCardVar.New=function(Heading,Blocks,Actions,MainAction)
@@ -288,9 +298,13 @@
   {
    return Doc.Element("div",[AttrProxy.Create("class","card-img")],[Doc.Element("img",[AttrProxy.Create("src",b.Source),AttrProxy.Create("alt",b.Alt)],[])]);
   }
+  function renderCardBlockWithMedia(cb)
+  {
+   return Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-media-block")],[Doc.Element("img",[AttrProxy.Create("class","card-media-image"),AttrProxy.Create("src",cb.MediaBlock.$0.Image.Source),AttrProxy.Create("alt",cb.MediaBlock.$0.Image.Alt)],[]),Doc.Element("div",[AttrProxy.Create("class","card-media-description")],[Doc.Element("span",[AttrProxy.Create("class","card-media-title")],[Doc.TextNode(cb.MediaBlock.$0.Title)]),Doc.Element("span",[AttrProxy.Create("class","card-media-text")],[Doc.TextNode(cb.MediaBlock.$0.Text)])])]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(cb.Text)])]);
+  }
   function renderCardBlock(b)
   {
-   return Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-title")],[Doc.TextNode(b.Title)]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(b.Text)])]);
+   return b.MediaBlock==null?Doc.Element("div",[AttrProxy.Create("class","card-block")],[Doc.Element("div",[AttrProxy.Create("class","card-title")],[Doc.TextNode(b.Title)]),Doc.Element("div",[AttrProxy.Create("class","card-text")],[Doc.TextNode(b.Text)])]):renderCardBlockWithMedia(b);
   }
   function act(a)
   {
@@ -1378,7 +1392,10 @@
     $0:ClarityImage.New("/images/placeholder_350x150.png","")
    },{
     $:0,
-    $0:ClarityCardBlock.New("Block","Card content can contain text, links, images, data visualizations, lists and more.")
+    $0:ClarityCardBlock.New("Block","Card content can contain text, links, images, data visualizations, lists and more.",{
+     $:1,
+     $0:CardMediaBlock.New(ClarityImage.New("/images/placeholder_60x60.png",""),"Project A","John Doe")
+    })
    }]),List.ofArray([ClarityAction.New("Footer Action 1",function()
    {
     console.log("Action 1 hit");
