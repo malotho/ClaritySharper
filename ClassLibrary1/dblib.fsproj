@@ -5,13 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="App.config" />
     <Compile Include="db1.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="sql_scripts\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SqlProvider" Version="1.1.57">
       <ExcludeAssets>compile</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Migrator\Migrator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.SqlProvider">

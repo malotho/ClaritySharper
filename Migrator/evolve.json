@@ -1,0 +1,6 @@
+﻿{
+  "Evolve.Database": "sqlserver",
+  "Evolve.ConnectionString": "Persist Security Info=False;Integrated Security=true;Initial Catalog=websharp;server=(local)",
+  "Evolve.Locations": "sql_scripts",
+  "Evolve.Command": "migrate"
+}

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="evolve.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="evolve.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Evolve.MSBuild.Windows.x64" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
