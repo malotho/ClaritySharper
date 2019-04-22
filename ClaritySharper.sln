@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ws2", "ws2\ws2.fsproj", "{B448094B-FE75-4D70-A33A-56748F5BF240}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "dblib", "ClassLibrary1\dblib.fsproj", "{0D1E1A7F-7DDC-4722-8359-D36135C71D48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Migrator", "Migrator\Migrator.csproj", "{9691768F-39D5-436E-9472-CFD70FB38ED4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0D1E1A7F-7DDC-4722-8359-D36135C71D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D1E1A7F-7DDC-4722-8359-D36135C71D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D1E1A7F-7DDC-4722-8359-D36135C71D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9691768F-39D5-436E-9472-CFD70FB38ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9691768F-39D5-436E-9472-CFD70FB38ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9691768F-39D5-436E-9472-CFD70FB38ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9691768F-39D5-436E-9472-CFD70FB38ED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
